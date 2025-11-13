@@ -1,3 +1,4 @@
+from urllib import request
 import pytest
 from framework.ui.core.browser_manager import BrowserManager
 
@@ -17,7 +18,9 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope="session")
 def page():
-    bm = BrowserManager(browser_type="chromium", headless=True)
+    browser_type = request.config.getoption("--browser")
+    headless = request.config.getoption("--headless")
+    bm = BrowserManager(browser_type=browser_type, headless=headless)
     page = bm.start()
     yield page
     bm.stop()

@@ -1,0 +1,7 @@
+{
+  "compression": "zip",
+  "format": "{level} [{time:HH:mm:ss}] {message}",
+  "level": "DEBUG",
+  "retention": "1 week",
+  "rotation": "1 day"
+}

@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from framework.logger.logger import Logger
+
 
 def pytest_configure(config):
     """
@@ -30,3 +32,39 @@ def pytest_configure(config):
             print(f"[allure-cleanup] FAILED to remove '{allure_dir}': {e}")
     else:
         print(f"[allure-cleanup] no '{allure_dir}' directory found")
+
+
+def pytest_runtest_logreport(report):
+    """
+    Logs test outcomes (PASSED/FAILED/SKIPPED/ERROR) using the new Logger.
+    This replaces print statements with structured logging.
+    """
+    if report.when == "call":
+        logger = Logger.get_logger()
+        nodeid = report.nodeid 
+
+        if report.passed:
+            logger.logger.info(f"\033[92m{nodeid} PASSED\033[0m")
+        elif report.failed:
+            if hasattr(report, "longrepr"):
+                logger.error(f"\033[91m{nodeid} FAILED\033[0m")
+            else:
+                logger.error(f"\033[91m{nodeid} FAILED\033[0m")
+        elif report.skipped:
+            logger.logger.warning(f"\033[93m{nodeid} SKIPPED\033[0m")
+        elif report.outcome == "error":
+            logger.error(f"\033[91m{nodeid} ERROR\033[0m")
+
+
+def pytest_generate_tests(metafunc):
+    for arg in metafunc.fixturenames:
+        if arg in metafunc.cls.__dict__.get("test_data_map", {}):
+            data_list = metafunc.cls.test_data_map[arg]
+            ids = []
+            for item in data_list:
+                if isinstance(item, dict) and "name" in item:
+                    ids.append(item["name"])
+                else:
+                    ids.append(str(item))
+
+            metafunc.parametrize(arg, data_list, ids=ids)
