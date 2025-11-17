@@ -5,6 +5,8 @@ import json
 import allure
 from typing import Any, Dict, Optional
 
+from framework.logger import logger
+
 load_dotenv()
 
 class HttpClient:
