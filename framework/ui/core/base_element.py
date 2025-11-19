@@ -38,7 +38,7 @@ class BaseElement():
         return elements
     
     def find_element(self) -> None:
-        return BaseElement(self.base_page, self.selector)
+        return BaseElement(self.page, self.selector)
 
     def find_all_elements(self) -> list:
         elems = self.page.locator(self.selector).all()
