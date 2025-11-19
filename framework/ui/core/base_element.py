@@ -28,3 +28,18 @@ class BaseElement():
     def hover(self) -> None:
         self.wait_for_visible()
         self.locator.hover()
+
+    def wait_for_elements(self, timeout: int = 15000):
+        elements = self.page.locator(self.selector).all()
+        if not elements:
+            elements = self.page.wait_for_selector(
+                self.selector, timeout=timeout
+            )
+        return elements
+    
+    def find_element(self) -> None:
+        return BaseElement(self.base_page, self.selector)
+
+    def find_all_elements(self) -> list:
+        elems = self.page.locator(self.selector).all()
+        return [BaseElement(self.page, f"{self.selector} >> nth={i}") for i in range(len(elems))]
