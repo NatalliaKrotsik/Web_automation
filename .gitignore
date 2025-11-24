@@ -1,6 +1,9 @@
 # Ignore specific files, db's config
 configs/db_config.json
-
+#Vs Code settings
+.vscode/
+.DS_Store
+.idea/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
