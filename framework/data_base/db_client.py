@@ -1,40 +1,19 @@
 from sqlalchemy import create_engine 
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select
 
 class DbClient:
     def __init__(self,url):
         self.engine = create_engine(url)
-        self.Sessoin = sessionmaker(bind=self.engine)
+        self.connection = self.engine.connect()
+        '''
+        Don't use 'self.engine.begin()' in case it will make a commit to data base 
+        '''
 
-    def fetch_one(self, query):
-        '''
-        Creates session and automatically closes it
-        Executes SQL or SQLAlchemy query
-        Fetches only one result row
-        Returns Row object or None
-        '''
-        with self.Sessoin() as session:
-            result = session.execute(query).fetchone()
-            return result 
+    def select_user_data(self,connection,query):
+        with self.engine as engine:
+            result = engine.execute(query)
+            return f'{result}'
         
-    def fetch_all(self, query):
-        '''
-        Creates session and automatically closes it
-        Executes SQL or SQLAlchemy query
-        Fetches all result rows
-        Returns list of Row objects (empty list if no results)
-        '''
-        with self.Sessoin() as session:
-            result = session.execute(query).fetchall()
-            return result 
-        
-    def execute(self, query): 
-        '''
-        Creates session and automatically closes it
-        Executes SQL or SQLAlchemy query that modifies data (INSERT, UPDATE, DELETE)
-        Commits transaction
-        Returns None
-        '''
-        with self.Session() as session: 
-            session.execute(query) 
-            session.commit()
+def test_db(query = 'SELECT VERSION'):
+    result = query.select_user_data()
