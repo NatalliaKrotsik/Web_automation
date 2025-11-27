@@ -8,7 +8,7 @@ class InputField(BaseElement):
     def clear(self) -> None:
         self.locator.fill("")
     
-    def type(self, text: str) -> None:
+    def _type(self, text: str) -> None:
         self.locator.fill(text)
     
     def clear_and_type(self, text: str) -> None:
