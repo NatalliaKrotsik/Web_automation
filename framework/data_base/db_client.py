@@ -56,15 +56,13 @@ class DbClient:
 
         self.engine = create_engine(url, echo=False)
         self.Session = sessionmaker(bind=self.engine)
-        self.metadata = MetaData(bind=self.engine)
+        self.metadata = MetaData()
 
-        self.users = Table(
-            'users', self.metadata,
-            Column('id', Integer, primary_key=True), 
-            Column('email', String),
-            Column('name', String),
-            autoload_with=self.engine
-        )
+        self.users = Table('user_user', 
+                           self.metadata, 
+                           schema='public', 
+                           autoload_with=self.engine
+                           )
         self.logger.debug('DbClient initialized and table "users" loaded')
 
 
@@ -88,13 +86,13 @@ class DbClient:
             (self.users.c.email == email) & (self.users.c.id == id)
             ).limit(limit)
 
-        with self.Session as session:
+        with self.Session() as session:
             result = session.execute(query)
             exists = result.first() is not None
             self.logger.debug(f"user_exists(email={email}, id={id}) -> {exists}")
             return exists
 
-    def get_user_data(self,email:str,id:int) -> Row | None:
+    def get_user_data(self,email:str = None,id:int = None) -> Row | None:
         """
         Retrieves user data from the database as a Row object.
 
@@ -109,10 +107,15 @@ class DbClient:
             - Logs whether the user was found or not.
             - Use the returned Row to access columns like row['id'], row['email'], etc.
         """
-        query = select(self.users).where(
-            (self.users.c.email == email) & (self.users.c.id == id)
-        )
-        with self.Session as session :
+        if email is not None and id is None:
+            query = select(self.users).where(self.users.c.email == email)
+        elif id is not None and email is None:
+            query = select(self.users).where(self.users.c.id == id)
+        elif email is not None and id is not None:
+            query = select(self.users).where(
+                (self.users.c.email == email) & (self.users.c.id == id)
+            )
+        with self.Session() as session :
             row = session.execute(query).first()
             if row is not None:
                 self.logger.debug(f"User with email={email} and id={id} created")

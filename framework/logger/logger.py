@@ -28,7 +28,12 @@ class Logger:
         # File handler
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
         file_handler.setLevel(getattr(logging, self.config.get("level", "INFO").upper()))
-        formatter = logging.Formatter(self.config.get("format", "%(asctime)s - %(levelname)s - %(message)s"))
+        formatter = logging.Formatter(
+    self.config.get("format", "{level} [{asctime}] {message}"),
+    style="{",
+    datefmt="%H:%M:%S" 
+)
+
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
 
@@ -39,7 +44,6 @@ class Logger:
         self.logger.addHandler(console_handler)
 
         self.step_counter = 0
-
 
     @staticmethod
     def log(func):
@@ -53,4 +57,27 @@ class Logger:
                 logger.error(f"Exception in {func.__name__}: {err}")
                 raise
         return wrapper
+
+    @classmethod
+    def get_logger(cls):
+        if cls._instance is None:
+            cls._instance = cls()
+        return cls._instance
+
+    @staticmethod
+    def debug(message: str) -> None:
+        logger = Logger.get_logger()  # получаем экземпляр Logger
+        logger.logger.debug("*" * 50)
+        logger.logger.debug(message)
+        logger.logger.debug("*" * 50)
+
+    @staticmethod
+    def info(message: str) -> None:
+        logger = Logger.get_logger()
+        logger.info(message)
+
+    @staticmethod
+    def error(message: str) -> None:
+        logger = Logger.get_logger()
+        logger.error(message)
 

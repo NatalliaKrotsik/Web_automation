@@ -30,6 +30,7 @@ allure-report/
 reports/
 logs/
 screenshots/
+qase.lock
 
 # Playwright
 playwright-report/

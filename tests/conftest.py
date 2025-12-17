@@ -1,8 +1,8 @@
 import os
 import shutil
-
+from dotenv import load_dotenv
 from framework.logger.logger import Logger
-
+load_dotenv()
 
 def pytest_configure(config):
     """
