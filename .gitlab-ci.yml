@@ -50,6 +50,7 @@ history_copy:
   dependencies: []
   script:
     # Download previous pipeline artifacts (replace project ID and branch as needed)
+    - apt update && apt install -y curl unzip
     - curl --location --output artifacts.zip "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN"
     - apk add --no-cache unzip
     - unzip artifacts.zip
