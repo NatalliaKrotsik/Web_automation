@@ -1,0 +1,74 @@
+stages:
+  - testing
+  - reports
+  - deploy
+
+setup_job:
+  stage: testing
+  image: python:3.12.3-slim
+  script:
+    - pip install poetry
+    - poetry install
+    - poetry run playwright install
+    - poetry run pre-commit install
+    - poetry run pre-commit run --all-files
+  artifacts:
+    paths:
+      - .venv/
+
+ui_tests:
+  stage: testing
+  image: python:3.12.3-slim
+  dependencies:
+    - setup_job
+  script:
+    - poetry run pytest --alluredir=allure-results ./tests/ui -n=4
+  allow_failure: true
+  artifacts:
+    paths:
+      - allure-results
+    expire_in: 1 day
+
+api_tests:
+  stage: testing
+  image: python:3.12.3-slim
+  dependencies:
+    - setup_job
+  script:
+    - poetry run pytest --alluredir=allure-results ./tests/api -n=4
+  allow_failure: false
+  artifacts:
+    paths:
+      - allure-results
+    expire_in: 1 day
+
+allure_report:
+  stage: reports
+  image: openjdk:11-jre-slim
+  dependencies:
+    - setup_job
+    - ui_tests
+    - api_tests
+  before_script:
+    - wget https://github.com/allure-framework/allure2/releases/download/2.21.0/allure-2.21.0.tgz
+    - tar -xzf allure-2.21.0.tgz
+    - mv allure-2.21.0 /opt/allure
+    - export PATH=$PATH:/opt/allure/bin
+  script:
+    - poetry run allure generate allure-results -o allure-report --clean
+  artifacts:
+    paths:
+      - allure-report
+    when: always
+    expire_in: 1 day
+
+deploy_job:
+  stage: deploy
+  script:
+    - mkdir public
+    - mv ./allure-report/* public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - when: always
