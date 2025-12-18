@@ -44,10 +44,31 @@ api_tests:
       - allure-results/api
     expire_in: 1 day
 
+history_copy:
+  stage: reports
+  image: alpine:latest
+  dependencies: []
+  script:
+    # Download previous pipeline artifacts (replace project ID and branch as needed)
+    - curl --location --output artifacts.zip "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN"
+    - apk add --no-cache unzip
+    - unzip artifacts.zip
+    # Merge history into current allure-results
+    - mkdir -p allure-results/history
+    - cp -r ./public/history/* allure-results/history/ || true
+  allow_failure: true
+  artifacts:
+    paths:
+      - allure-results
+    expire_in: 1 day
+  rules:
+    - when: always
+
 allure_report:
   stage: reports
   image: frankescobar/allure-docker-service
   dependencies:
+    - history_copy
     - ui_tests
     - api_tests
   script:
@@ -56,7 +77,7 @@ allure_report:
     paths:
       - ./allure-results
       - ./allure-report
-      
+
 deploy_job:
   stage: deploy
   dependencies:
