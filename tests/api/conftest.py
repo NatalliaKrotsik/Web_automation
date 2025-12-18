@@ -32,11 +32,3 @@ def email_admin() -> str:
 @pytest.fixture
 def password_admin() -> str:
     return os.getenv("ADMIN_USER_PASSWORD")
-
-
-@pytest.fixture
-def get_admin_tokens(email_admin, password_admin) -> Dict:
-    """Retrieves admin tokens from the Auth API."""
-    admin_auth_api = AdminAuthAPI()
-    tokens = admin_auth_api.authorization(email_admin, password_admin)
-    return tokens.json()

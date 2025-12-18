@@ -1,7 +1,10 @@
 from framework.ui.core.base_page import BasePage
 from framework.ui.elements.button import Button
-from tests.ui.conftest import page
+from dotenv import load_dotenv
 
+load_dotenv()
+
+import os
 
 class ExamplePage(BasePage):
 
@@ -10,7 +13,7 @@ class ExamplePage(BasePage):
     LOGO = "//*[@id='root']/div/header/div/div[1]/a"
 
     def __init__(self, page):
-        super().__init__(page, "https://web-dev.pretty.andersenlab.dev/")
+        super().__init__(page, os.getenv("BASE_URL_DEV"))
         self.page = page
         self.logo = page.locator(self.LOGO)
         self.login_btn = Button(page,self.LOGIN_BTN)
