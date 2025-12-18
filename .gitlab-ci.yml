@@ -46,7 +46,7 @@ api_tests:
 
 history_copy:
   stage: reports
-  image: alpine:latest
+  image: ubuntu:latest
   dependencies: []
   script:
     # Download previous pipeline artifacts (replace project ID and branch as needed)
