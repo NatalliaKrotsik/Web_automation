@@ -1,10 +1,10 @@
+import os
 from framework.ui.core.base_page import BasePage
 from framework.ui.elements.button import Button
 from dotenv import load_dotenv
 
 load_dotenv()
 
-import os
 
 class ExamplePage(BasePage):
 
@@ -16,8 +16,8 @@ class ExamplePage(BasePage):
         super().__init__(page, os.getenv("BASE_URL_DEV"))
         self.page = page
         self.logo = page.locator(self.LOGO)
-        self.login_btn = Button(page,self.LOGIN_BTN)
-        self.signup_btn = Button(page,self.SIGN_UP_BTN)
+        self.login_btn = Button(page, self.LOGIN_BTN)
+        self.signup_btn = Button(page, self.SIGN_UP_BTN)
 
     def click_logo(self):
         self.logo.click()

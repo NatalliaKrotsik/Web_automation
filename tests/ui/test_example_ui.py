@@ -3,11 +3,12 @@ import pytest
 
 from framework.ui.pages.example_page import ExamplePage
 
+
 @pytest.mark.ui
-@pytest.mark.qase("US-1.1")
+@pytest.mark.qase("LC-89")
 @allure.suite("Example UI Tests")
 class TestExampleUI:
-    
+
     @allure.severity(allure.severity_level.NORMAL)
     def test_check_click_home_logo(self, page):
         main = ExamplePage(page)

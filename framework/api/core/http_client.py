@@ -9,6 +9,7 @@ from framework.logger.logger import Logger
 
 load_dotenv()
 
+
 class HttpClient:
     """
     Base HTTP client that centralizes URL building, logging, and Allure attachments.
@@ -117,7 +118,5 @@ class HttpClient:
     def delete(self, path: str, **kwargs: Any) -> requests.Response:
         return self._request("DELETE", path, **kwargs)
 
-    def update_headers(
-        self, default_headers: Optional[Dict[str, str]]
-    ) -> None:
+    def update_headers(self, default_headers: Optional[Dict[str, str]]) -> None:
         self.session.headers.update(default_headers)

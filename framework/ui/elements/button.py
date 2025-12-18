@@ -4,7 +4,7 @@ from framework.ui.core.base_element import BaseElement
 class Button(BaseElement):
     def __init__(self, page, selector):
         super().__init__(page, selector)
-    
+
     def get_button_locator_and_click_around(self):
 
         button_box = self.selector.bounding_box()

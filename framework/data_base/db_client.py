@@ -1,29 +1,31 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, select 
+from sqlalchemy import create_engine, Table, MetaData, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.row import Row
 import time
 import logging
-import os 
+import os
 import framework.utils.utils as helpers
+
 
 class DbClient:
     """
-        DbClient — a class for interacting with a database using SQLAlchemy Core.
+    DbClient — a class for interacting with a database using SQLAlchemy Core.
 
-        Features:
-            - Connects to the database using a provided URL.
-            - Automatically loads the schema of the 'users' table.
-            - Built-in logger that writes logs both to a file and to the console.
-            - Methods for checking user existence, retrieving user data, and waiting for a user to be created.
+    Features:
+        - Connects to the database using a provided URL.
+        - Automatically loads the schema of the 'users' table.
+        - Built-in logger that writes logs both to a file and to the console.
+        - Methods for checking user existence, retrieving user data, and waiting for a user to be created.
 
-        Attributes:
-            engine (Engine): SQLAlchemy Engine for database connection.
-            Session (sessionmaker): SQLAlchemy session factory.
-            metadata (MetaData): Database metadata object.
-            users (Table): SQLAlchemy Table object representing the 'users' table.
-            logger (Logger): Logger instance for debugging and tracking operations.
+    Attributes:
+        engine (Engine): SQLAlchemy Engine for database connection.
+        Session (sessionmaker): SQLAlchemy session factory.
+        metadata (MetaData): Database metadata object.
+        users (Table): SQLAlchemy Table object representing the 'users' table.
+        logger (Logger): Logger instance for debugging and tracking operations.
     """
-    def __init__(self,url):
+
+    def __init__(self, url):
         """
         Initializes the DbClient.
 
@@ -36,7 +38,7 @@ class DbClient:
             - Metadata
             - 'users' table object
             - Logger (writes to console and file)
-        """      
+        """
         self.logger = logging.getLogger("DbClientLogger")
         self.logger.setLevel(logging.DEBUG)
 
@@ -58,15 +60,12 @@ class DbClient:
         self.Session = sessionmaker(bind=self.engine)
         self.metadata = MetaData()
 
-        self.users = Table('user_user', 
-                           self.metadata, 
-                           schema='public', 
-                           autoload_with=self.engine
-                           )
+        self.users = Table(
+            "user_user", self.metadata, schema="public", autoload_with=self.engine
+        )
         self.logger.debug('DbClient initialized and table "users" loaded')
 
-
-    def user_exists(self,email:str,id:int, limit=1) -> bool:
+    def user_exists(self, email: str, id: int, limit=1) -> bool:
         """
         Checks whether a user exists in the database.
 
@@ -82,9 +81,11 @@ class DbClient:
             The LIMIT 1 ensures only one row is fetched for efficiency.
             Logs the result of the check.
         """
-        query = select(self.users.c.id).where(
-            (self.users.c.email == email) & (self.users.c.id == id)
-            ).limit(limit)
+        query = (
+            select(self.users.c.id)
+            .where((self.users.c.email == email) & (self.users.c.id == id))
+            .limit(limit)
+        )
 
         with self.Session() as session:
             result = session.execute(query)
@@ -92,7 +93,7 @@ class DbClient:
             self.logger.debug(f"user_exists(email={email}, id={id}) -> {exists}")
             return exists
 
-    def get_user_data(self,email:str = None,id:int = None) -> Row | None:
+    def get_user_data(self, email: str = None, id: int = None) -> Row | None:
         """
         Retrieves user data from the database as a Row object.
 
@@ -115,15 +116,17 @@ class DbClient:
             query = select(self.users).where(
                 (self.users.c.email == email) & (self.users.c.id == id)
             )
-        with self.Session() as session :
+        with self.Session() as session:
             row = session.execute(query).first()
             if row is not None:
                 self.logger.debug(f"User with email={email} and id={id} created")
             else:
-                 self.logger.debug(f"User with email={email} and id={id} doesn't exist in data base")
+                self.logger.debug(
+                    f"User with email={email} and id={id} doesn't exist in data base"
+                )
             return row
 
-    def wait_until_user_created(self,email:str,id:int,timeout:int=30) -> bool:
+    def wait_until_user_created(self, email: str, id: int, timeout: int = 30) -> bool:
         """
         Waits until a user is created in the database or until a timeout is reached.
 
@@ -143,8 +146,10 @@ class DbClient:
         while time.time() - start_time < timeout:
             if self.user_exists(email, id):
                 self.logger.debug(f"User with email={email} and id={id} created")
-                return True 
+                return True
             time.sleep(1)
 
-        self.logger.debug(f"Timeout reached: user with email={email} and id={id} doesn't exist in data base")
+        self.logger.debug(
+            f"Timeout reached: user with email={email} and id={id} doesn't exist in data base"
+        )
         return False
