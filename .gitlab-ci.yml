@@ -46,24 +46,17 @@ api_tests:
 
 allure_report:
   stage: reports
-  image: openjdk:11-jre-slim
+  image: frankescobar/allure-docker-service
   dependencies:
-    - setup_job
     - ui_tests
     - api_tests
-  before_script:
-    - wget https://github.com/allure-framework/allure2/releases/download/2.21.0/allure-2.21.0.tgz
-    - tar -xzf allure-2.21.0.tgz
-    - mv allure-2.21.0 /opt/allure
-    - export PATH=$PATH:/opt/allure/bin
   script:
-    - poetry run allure generate allure-results -o allure-report --clean
+    - allure generate -c ./allure-results -o ./allure-report
   artifacts:
     paths:
-      - allure-report
-    when: always
-    expire_in: 1 day
-
+      - ./allure-results
+      - ./allure-report
+      
 deploy_job:
   stage: deploy
   dependencies:
