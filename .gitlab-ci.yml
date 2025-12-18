@@ -12,8 +12,10 @@ setup_job:
     - poetry run playwright install
     - poetry run pre-commit install
     - poetry run pre-commit run --all-files
-  artifacts:
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
     paths:
+      - .cache/pip
       - .venv/
 
 ui_tests:
@@ -26,7 +28,7 @@ ui_tests:
   allow_failure: true
   artifacts:
     paths:
-      - allure-results
+      - allure-results/ui
     expire_in: 1 day
 
 api_tests:
@@ -39,7 +41,7 @@ api_tests:
   allow_failure: true
   artifacts:
     paths:
-      - allure-results
+      - allure-results/api
     expire_in: 1 day
 
 allure_report:
