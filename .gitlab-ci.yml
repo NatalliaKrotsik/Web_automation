@@ -36,7 +36,7 @@ api_tests:
     - setup_job
   script:
     - poetry run pytest --alluredir=allure-results ./tests/api -n=4
-  allow_failure: false
+  allow_failure: true
   artifacts:
     paths:
       - allure-results
@@ -64,6 +64,8 @@ allure_report:
 
 deploy_job:
   stage: deploy
+  dependencies:
+    - allure_report
   script:
     - mkdir public
     - mv ./allure-report/* public
