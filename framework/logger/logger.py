@@ -23,23 +23,29 @@ class Logger:
         if Logger._worker_id == "master":
             log_file = os.path.join(Logger._root_dir, "logs", "master.log")
         else:
-            log_file = os.path.join(Logger._root_dir, "logs", f"worker_{Logger._worker_id}.log")
+            log_file = os.path.join(
+                Logger._root_dir, "logs", f"worker_{Logger._worker_id}.log"
+            )
 
         # File handler
         file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setLevel(getattr(logging, self.config.get("level", "INFO").upper()))
+        file_handler.setLevel(
+            getattr(logging, self.config.get("level", "INFO").upper())
+        )
         formatter = logging.Formatter(
-    self.config.get("format", "{level} [{asctime}] {message}"),
-    style="{",
-    datefmt="%H:%M:%S" 
-)
+            self.config.get("format", "{level} [{asctime}] {message}"),
+            style="{",
+            datefmt="%H:%M:%S",
+        )
 
         file_handler.setFormatter(formatter)
         self.logger.addHandler(file_handler)
 
         # Optional: also log to console
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(getattr(logging, self.config.get("level", "INFO").upper()))
+        console_handler.setLevel(
+            getattr(logging, self.config.get("level", "INFO").upper())
+        )
         console_handler.setFormatter(formatter)
         self.logger.addHandler(console_handler)
 
@@ -56,6 +62,7 @@ class Logger:
             except AssertionError as err:
                 logger.error(f"Exception in {func.__name__}: {err}")
                 raise
+
         return wrapper
 
     @classmethod
@@ -80,4 +87,3 @@ class Logger:
     def error(message: str) -> None:
         logger = Logger.get_logger()
         logger.error(message)
-

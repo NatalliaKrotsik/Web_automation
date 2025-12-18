@@ -2,6 +2,7 @@ import allure
 import pytest
 from framework.api.loans_api import LoansAPI
 
+
 @pytest.mark.api
 @pytest.mark.qase("US-1.1")
 @allure.suite("Example Api Tests")

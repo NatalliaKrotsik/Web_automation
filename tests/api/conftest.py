@@ -5,6 +5,7 @@ import os
 
 from framework.api.auth_api import AuthAPI
 
+
 @pytest.fixture
 def email_dev() -> str:
     return os.getenv("USER_EMAIL_DEV")

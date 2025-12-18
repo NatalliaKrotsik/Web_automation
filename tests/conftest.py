@@ -2,7 +2,9 @@ import os
 import shutil
 from dotenv import load_dotenv
 from framework.logger.logger import Logger
+
 load_dotenv()
+
 
 def pytest_configure(config):
     """
@@ -41,7 +43,7 @@ def pytest_runtest_logreport(report):
     """
     if report.when == "call":
         logger = Logger.get_logger()
-        nodeid = report.nodeid 
+        nodeid = report.nodeid
 
         if report.passed:
             logger.logger.info(f"\033[92m{nodeid} PASSED\033[0m")
