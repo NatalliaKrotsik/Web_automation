@@ -5,7 +5,7 @@ import json
 import allure
 from typing import Any, Dict, Optional
 
-from framework.logger import logger
+from framework.logger.logger import Logger
 
 load_dotenv()
 
@@ -92,7 +92,8 @@ class HttpClient:
         Core request method that performs the HTTP call, logging, and Allure attachments.
         """
         url = self._build_url(path)
-        logger.debug(
+
+        Logger.debug(
             f"[HTTP] {method} {url} | params={params} json={json_body} kwargs={kwargs}"
         )
         resp = self.session.request(

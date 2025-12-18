@@ -1,4 +1,3 @@
-from framework.ui.core.base_element import BaseElement
 from playwright.sync_api import Page
 
 class BasePage():
