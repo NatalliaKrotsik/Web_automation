@@ -84,8 +84,13 @@ pages:
   dependencies:
     - allure_report
   script:
-    - mkdir public
-    - mv ./allure-report/* public
+    - mkdir -p public
+    - |
+      if [ -d allure-report ]; then
+        mv allure-report/* public
+      else
+        echo "No Allure report to publish"
+      fi
   artifacts:
     paths:
       - public
