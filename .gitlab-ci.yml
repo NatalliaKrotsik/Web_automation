@@ -1,3 +1,11 @@
+variables:
+  USER_EMAIL_DEV: "053xp@tohru.org"
+  USER_PASSWORD_DEV: "Test@1234"
+  ADMIN_USER_EMAIL: "system_admin@prettybank.com"
+  ADMIN_USER_PASSWORD: "SystemSuperAdmin1!"
+  BASE_URL_DEV: "https://web-dev.pretty.andersenlab.dev/"
+  API_URL_DEV: "https://api-dev.pretty.andersenlab.dev/api"
+
 stages:
   - testing
   - reports
@@ -5,6 +13,7 @@ stages:
 
 before_script:
     - pip install poetry
+    - poetry config virtualenvs.in-project true
     - poetry install --no-root
     - poetry run playwright install
 
