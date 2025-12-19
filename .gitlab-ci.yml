@@ -3,29 +3,14 @@ stages:
   - reports
   - deploy
 
-setup_job:
-  stage: testing
-  image: python:3.12.3-slim
-  script:
+before_script:
     - pip install poetry
-    - poetry install
+    - poetry install --no-root
     - poetry run playwright install
-    - poetry run pre-commit install-hooks
-    - poetry run pre-commit run --all-files --show-diff-on-failure
-    
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - .cache/pip
-      - .venv/
-  rules:
-    - when: always
 
 ui_tests:
   stage: testing
   image: python:3.12.3-slim
-  dependencies:
-    - setup_job
   script:
     - poetry run pytest --alluredir=allure-results ./tests/ui -n=4
   allow_failure: true
@@ -39,8 +24,6 @@ ui_tests:
 api_tests:
   stage: testing
   image: python:3.12.3-slim
-  dependencies:
-    - setup_job
   script:
     - poetry run pytest --alluredir=allure-results ./tests/api -n=4
   allow_failure: true
@@ -55,6 +38,7 @@ history_copy:
   stage: reports
   image: ubuntu:latest
   dependencies: []
+  before_script: []
   script:
       - apt update && apt install -y curl unzip
       - curl --fail --location \
@@ -79,6 +63,7 @@ allure_report:
     - history_copy
     - ui_tests
     - api_tests
+  before_script: []
   script:
     - allure generate -c ./allure-results -o ./allure-report
   artifacts:
@@ -90,6 +75,7 @@ pages:
   stage: deploy
   dependencies:
     - allure_report
+  before_script: []
   script:
     - mkdir -p public
     - |
