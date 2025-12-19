@@ -50,8 +50,11 @@ history_copy:
   dependencies: []
   script:
       - apt update && apt install -y curl unzip
-      - curl --location --output artifacts.zip "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN"
-      - unzip artifacts.zip
+      - curl --fail --location \
+        --output artifacts.zip \
+        "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN" \
+        || echo "No previous Pages artifacts"
+      - unzip artifacts.zip || echo "Nothing to unzip"
       - mkdir -p allure-results/history
       - cp -r ./public/history/* allure-results/history/ || true
   allow_failure: true
