@@ -19,7 +19,7 @@ setup_job:
       - .cache/pip
       - .venv/
   rules:
-    -when: always
+    - when: always
 
 ui_tests:
   stage: testing
