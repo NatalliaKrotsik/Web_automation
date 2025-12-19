@@ -10,13 +10,16 @@ setup_job:
     - pip install poetry
     - poetry install
     - poetry run playwright install
-    - poetry run pre-commit install
-    - poetry run pre-commit run --all-files
+    - poetry run pre-commit install-hooks
+    - poetry run pre-commit run --all-files --show-diff-on-failure
+    
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - .cache/pip
       - .venv/
+  rules:
+    -when: always
 
 ui_tests:
   stage: testing
@@ -30,6 +33,8 @@ ui_tests:
     paths:
       - allure-results/ui
     expire_in: 1 day
+  rules:
+    - when: always
 
 api_tests:
   stage: testing
@@ -43,6 +48,8 @@ api_tests:
     paths:
       - allure-results/api
     expire_in: 1 day
+  rules:
+    - when: always
 
 history_copy:
   stage: reports
@@ -89,7 +96,7 @@ pages:
       if [ -d allure-report ]; then
         mv allure-report/* public
       else
-        echo "No Allure report to publish"
+        echo "<html><body><h1>No Allure report available</h1></body></html>" > public/index.html
       fi
   artifacts:
     paths:
