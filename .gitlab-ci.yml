@@ -16,6 +16,7 @@ before_script:
     - poetry config virtualenvs.in-project true
     - poetry install --no-root
     - poetry run playwright install
+    - poetry run playwright install-deps
 
 ui_tests:
   stage: testing
@@ -87,12 +88,7 @@ pages:
   before_script: []
   script:
     - mkdir -p public
-    - |
-      if [ -d allure-report ]; then
-        mv allure-report/* public
-      else
-        echo "<html><body><h1>No Allure report available</h1></body></html>" > public/index.html
-      fi
+    - mv ./allure-report/* public
   artifacts:
     paths:
       - public
