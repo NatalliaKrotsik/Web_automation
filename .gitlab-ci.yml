@@ -26,7 +26,7 @@ ui_tests:
   allow_failure: true
   artifacts:
     paths:
-      - allure-results/ui
+      - allure-results
     expire_in: 1 day
   rules:
     - when: always
@@ -39,7 +39,7 @@ api_tests:
   allow_failure: true
   artifacts:
     paths:
-      - allure-results/api
+      - allure-results
     expire_in: 1 day
   rules:
     - when: always
@@ -75,7 +75,9 @@ allure_report:
     - api_tests
   before_script: []
   script:
+    - ls -la
     - allure generate -c ./allure-results -o ./allure-report
+    - ls -la ./allure-report
   artifacts:
     paths:
       - ./allure-results
