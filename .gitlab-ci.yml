@@ -82,23 +82,25 @@ allure_report:
   stage: reports
   image: frankescobar/allure-docker-service
   dependencies:
-    - ui_tests
-    - api_tests
+    - ui
+    - api
     - history_copy
   before_script: []
   script:
-    - echo "=== Checking merged sources ==="
-    - ls -R .
-    - echo "=== Creating merged-results ==="
     - mkdir merged-results
-    - cp -r allure-results-ui/* merged-results/ || echo "NO UI RESULTS"
-    - cp -r allure-results-api/* merged-results/ || echo "NO API RESULTS"
-    - cp -r allure-history/* merged-results/history/ || echo "NO HISTORY"
-    - echo "=== Contents of merged-results ==="
-    - ls -R merged-results
-    - allure generate -c merged-results -o allure-report || echo "ALLURE FAILED"
-    - echo "=== Contents of allure-report ==="
-    - ls -R allure-report || echo "NO REPORT GENERATED"
+
+    # merge UI + API
+    - cp -r allure-results-ui/* merged-results/ || true
+    - cp -r allure-results-api/* merged-results/ || true
+
+    # add history
+    - mkdir -p merged-results/history
+    - cp -r allure-history/* merged-results/history/ || true
+
+    # generate report
+    - allure generate -c merged-results -o allure-report
+
+    - ls -la allure-report
   artifacts:
     paths:
       - allure-report
