@@ -14,11 +14,12 @@ stages:
 before_script:
   - pip install poetry
   - poetry config virtualenvs.in-project true
-  - - |
-  - if ! poetry install --no-root 2>&1 | grep -q "Installing dependencies from lock file"; then
-  - echo "Lock file out of sync, regenerating..."
-  - poetry lock --no-update
-  - fi
+  - |
+      # check lock file sync
+      if ! poetry install --no-root 2>&1 | grep -q "Installing dependencies from lock file"; then
+        echo "Lock file out of sync, regenerating..."
+        poetry lock
+      fi
   - poetry install --no-root
   - poetry run playwright install
   - poetry run playwright install-deps
