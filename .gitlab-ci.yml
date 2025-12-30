@@ -6,6 +6,12 @@ variables:
   BASE_URL_DEV: "https://dev.pretty-py.andersenlab.dev"
   API_URL_DEV: "https://api-dev.pretty-py.andersenlab.dev"
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .venv/
+    - .cache/pypoetry/
+    - .cache/pip/
 stages:
   - testing
   - reports
@@ -14,13 +20,17 @@ stages:
 before_script:
   - pip install poetry
   - poetry config virtualenvs.in-project true
+
+  # Try using existing environment; regenerate lock only if needed
   - |
-      # check lock file sync
-      if ! poetry install --no-root 2>&1 | grep -q "Installing dependencies from lock file"; then
-        echo "Lock file out of sync, regenerating..."
-        poetry lock
-      fi
+    if ! poetry install --no-root 2>&1 | grep -q "Installing dependencies from lock file"; then
+      echo "Lock file out of sync, regenerating..."
+      poetry lock
+    fi
+
   - poetry install --no-root
+
+  # Playwright binaries (cached after first run)
   - poetry run playwright install
   - poetry run playwright install-deps
 
