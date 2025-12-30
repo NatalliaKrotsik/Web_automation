@@ -82,8 +82,8 @@ allure_report:
   stage: reports
   image: frankescobar/allure-docker-service
   dependencies:
-    - ui
-    - api
+    - ui_tests
+    - api_tests
     - history_copy
   before_script: []
   script:
