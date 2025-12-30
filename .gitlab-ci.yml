@@ -17,6 +17,15 @@ before_script:
   - poetry install --no-root
   - poetry run playwright install
   - poetry run playwright install-deps
+# Health check
+  - |
+    echo "Checking if web app is accessible..."
+    apt-get update && apt-get install -y curl
+    if curl -f -s -o /dev/null "${BASE_URL:-https://web-dev.pretty.andersenlab.dev}"; then
+      echo "✓ Web app is accessible"
+    else
+      echo "✗ Warning: Web app is not accessible, tests may fail"
+    fi
 
 ############################
 # UI TESTS
