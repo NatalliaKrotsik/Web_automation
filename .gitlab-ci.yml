@@ -3,8 +3,8 @@ variables:
   USER_PASSWORD_DEV: "Test@1234"
   ADMIN_USER_EMAIL: "system_admin@prettybank.com"
   ADMIN_USER_PASSWORD: "SystemSuperAdmin1!"
-  BASE_URL_DEV: "https://web-dev.pretty.andersenlab.dev/"
-  API_URL_DEV: "https://api-dev.pretty.andersenlab.dev/api"
+  BASE_URL_DEV: "https://dev.pretty-py.andersenlab.dev"
+  API_URL_DEV: "https://api-dev.pretty-py.andersenlab.dev"
 
 stages:
   - testing
