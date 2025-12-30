@@ -1,37 +1,130 @@
-[project]
+[tool.poetry]
 name = "pretty-autotests"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "g.khabazishvili@andersenlab.com"}
-]
+description = "Pretty 2.0 Automated Testing Suite"
+authors = ["g.khabazishvili@andersenlab.com"]
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-    "requests (>=2.32.5,<3.0.0)",
-    "playwright (>=1.56.0,<2.0.0)",
-    "pytest (>=8.3.0,<9.0.0)",
-    "allure-pytest (>=2.15.0,<3.0.0)",
-    "python-dotenv (>=1.2.1,<2.0.0)",
-    "faker (>=38.0.0,<39.0.0)",
-    "pytest-playwright (>=0.7.1,<0.8.0)",
-    "pytest-mock (>=3.15.1,<4.0.0)",
-    "pytest-check (>=2.6.0,<3.0.0)",
-    "jsonschema (>=4.25.1,<5.0.0)",
-    "assertpy (>=1.1,<2.0)",
-    "pydantic (>=2.12.4,<3.0.0)",
-    "pre-commit (>=4.4.0,<5.0.0)",
-    "qaseio (>=4.0.2,<5.0.0)",
-    "qase-pytest (>=7.0.6,<8.0.0)",
-    "sqlalchemy (>=2.0.44,<3.0.0)",
-    "pytest-xdist (>=3.8.0,<4.0.0)",
-    "black (>=25.12.0,<26.0.0)"
-]
+packages = [{include = "framework"}, {include = "tests"}]
 
-[tool.black]
-line-length = 88
-target-version = ["py311"]
+[tool.poetry.dependencies]
+python = "^3.11"
+
+# Core testing
+pytest = "^8.3.0"
+pytest-playwright = "^0.7.1"
+pytest-xdist = "^3.8.0"
+pytest-mock = "^3.15.1"
+pytest-check = "^2.6.0"
+pytest-rerunfailures = "^12.0"
+allure-pytest = "^2.15.0"
+
+# Playwright & Selenium
+playwright = "^1.56.0"
+# selenium = "^4.11.2"  # Uncomment if still needed
+# webdriver-manager = "^3.8.6"  # Uncomment if still needed
+
+# HTTP & API
+requests = "^2.32.5"
+
+# Data validation & handling
+pydantic = "^2.12.4"
+jsonschema = "^4.25.1"
+assertpy = "^1.1"
+
+# Database
+sqlalchemy = "^2.0.44"
+psycopg2-binary = "^2.9.6"  # Keep for direct SQL if needed
+# redis = "^4.6.0"  # Uncomment if you use Redis
+
+# Test data & utilities
+faker = "^38.0.0"
+python-dotenv = "^1.2.1"
+loguru = "^0.7.0"
+# openpyxl = "^3.1.4"  # Uncomment if you work with Excel files
+
+# Test management (Qase)
+qaseio = "^4.0.2"
+qase-pytest = "^7.0.6"
+
+# Code quality
+black = "^25.1.0"
+pre-commit = "^4.4.0"
+
+[tool.poetry.group.dev.dependencies]
+# Development-only dependencies can go here
+ruff = "^0.8.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | \.pytest_cache
+  | __pycache__
+  | allure-results
+  | allure-report
+)/
+'''
+
+[tool.ruff]
+exclude = [
+    "venv",
+    ".venv",
+    ".env",
+    ".git",
+    "__pycache__",
+    "allure-results",
+    "allure-report"
+]
+line-length = 120
+fix = true
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # function calls in argument defaults
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["framework", "tests"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--alluredir=allure-results",
+    "--clean-alluredir"
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "api: pytest mark used for API tests",
+    "smoke: pytest mark used for Smoke tests",
+    "ui: pytest mark used for UI tests",
+    "dependency: mark test as depending on another test",
+    "regression: mark test as part of regression suites",
+    "qase: Qase test case markers"
+]

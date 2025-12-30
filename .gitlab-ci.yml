@@ -1,0 +1,148 @@
+variables:
+  USER_EMAIL_DEV: "053xp@tohru.org"
+  USER_PASSWORD_DEV: "Test@1234"
+  ADMIN_USER_EMAIL: "system_admin@prettybank.com"
+  ADMIN_USER_PASSWORD: "SystemSuperAdmin1!"
+  BASE_URL_DEV: "https://dev.pretty-py.andersenlab.dev"
+  API_URL_DEV: "https://api-dev.pretty-py.andersenlab.dev"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .venv/
+    - .cache/pypoetry/
+    - .cache/pip/
+stages:
+  - testing
+  - reports
+  - deploy
+
+before_script:
+  - pip install poetry
+  - poetry config virtualenvs.in-project true
+
+  # Try using existing environment; regenerate lock only if needed
+  - |
+    if ! poetry install --no-root 2>&1 | grep -q "Installing dependencies from lock file"; then
+      echo "Lock file out of sync, regenerating..."
+      poetry lock
+    fi
+
+  - poetry install --no-root
+
+  # Playwright binaries (cached after first run)
+  - poetry run playwright install
+  - poetry run playwright install-deps
+
+############################
+# UI TESTS
+############################
+ui_tests:
+  stage: testing
+  image: python:3.12.3-slim
+  script:
+    - poetry run pytest --alluredir=allure-results-ui ./tests/ui -n=4
+  allow_failure: true
+  artifacts:
+    paths:
+      - allure-results-ui
+    expire_in: 1 day
+  rules:
+    - when: always
+
+############################
+# API TESTS
+############################
+api_tests:
+  stage: testing
+  image: python:3.12.3-slim
+  script:
+    - poetry run pytest --alluredir=allure-results-api ./tests/api -n=4
+  allow_failure: true
+  artifacts:
+    paths:
+      - allure-results-api
+    expire_in: 1 day
+  rules:
+    - when: always
+
+############################
+# HISTORY COPY
+############################
+history_copy:
+  stage: reports
+  image: ubuntu:latest
+  dependencies: []
+  before_script: []
+  script:
+    - apt update && apt install -y curl unzip
+    - curl --fail --location \
+      --output artifacts.zip \
+      "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN" \
+      || echo "No previous Pages artifacts"
+    - unzip artifacts.zip || echo "Nothing to unzip"
+    - mkdir -p allure-history
+    - cp -r ./public/history/* allure-history/ || true
+  allow_failure: true
+  artifacts:
+    paths:
+      - allure-history
+    expire_in: 1 day
+  rules:
+    - when: always
+
+############################
+# ALLURE REPORT MERGE + GENERATION
+############################
+allure_report:
+  stage: reports
+  image: frankescobar/allure-docker-service
+  dependencies:
+    - ui_tests
+    - api_tests
+    - history_copy
+  before_script: []
+  script:
+    - mkdir merged-results
+
+    # merge UI + API
+    - cp -r allure-results-ui/* merged-results/ || true
+    - cp -r allure-results-api/* merged-results/ || true
+
+    # add history
+    - mkdir -p merged-results/history
+    - cp -r allure-history/* merged-results/history/ || true
+
+    # generate report
+    - allure generate -c merged-results -o allure-report
+
+    - ls -la allure-report
+  artifacts:
+    paths:
+      - allure-report
+    expire_in: 1 week
+
+############################
+# DEPLOY TO PAGES
+############################
+pages:
+  stage: deploy
+  dependencies:
+    - allure_report
+  before_script: []
+  script:
+    - mkdir -p public
+    - |
+      if [ -d "allure-report" ] && [ "$(ls -A allure-report)" ]; then
+        mv allure-report/* public/
+        echo "Allure report deployed"
+      else
+        echo "<h1>No test results available</h1>" > public/index.html
+        echo "No allure report found, created placeholder"
+      fi
+    - ls -la public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - when: always

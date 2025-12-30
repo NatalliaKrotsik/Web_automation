@@ -12,12 +12,11 @@ class Logger:
 
     def __init__(self):
         self.logger = logging.getLogger("FrameworkLogger")
-        self.logger.setLevel(logging.DEBUG)  # default level, can override from config
+        self.logger.setLevel(logging.DEBUG)
 
         with open(os.path.join(Logger._root_dir, "configs", "logger_config.json")) as f:
             self.config = json.load(f)
 
-        # Create log directory if it doesn't exist
         os.makedirs(os.path.join(Logger._root_dir, "logs"), exist_ok=True)
 
         if Logger._worker_id == "master":
@@ -27,27 +26,20 @@ class Logger:
                 Logger._root_dir, "logs", f"worker_{Logger._worker_id}.log"
             )
 
-        # File handler
-        file_handler = logging.FileHandler(log_file, encoding="utf-8")
-        file_handler.setLevel(
-            getattr(logging, self.config.get("level", "INFO").upper())
-        )
+        handler = logging.FileHandler(log_file, encoding="utf-8")
+        handler.setLevel(getattr(logging, self.config.get("level", "INFO").upper()))
         formatter = logging.Formatter(
             self.config.get("format", "{level} [{asctime}] {message}"),
             style="{",
             datefmt="%H:%M:%S",
         )
+        handler.setFormatter(formatter)
+        self.logger.addHandler(handler)
 
-        file_handler.setFormatter(formatter)
-        self.logger.addHandler(file_handler)
-
-        # Optional: also log to console
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(
-            getattr(logging, self.config.get("level", "INFO").upper())
-        )
-        console_handler.setFormatter(formatter)
-        self.logger.addHandler(console_handler)
+        console = logging.StreamHandler()
+        console.setLevel(getattr(logging, self.config.get("level", "INFO").upper()))
+        console.setFormatter(formatter)
+        self.logger.addHandler(console)
 
         self.step_counter = 0
 
@@ -55,14 +47,13 @@ class Logger:
     def log(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            logger = Logger.get_logger()
+            logger = Logger.get_logger().logger
             try:
                 result = func(*args, **kwargs)
                 return result
             except AssertionError as err:
                 logger.error(f"Exception in {func.__name__}: {err}")
                 raise
-
         return wrapper
 
     @classmethod
@@ -72,18 +63,18 @@ class Logger:
         return cls._instance
 
     @staticmethod
-    def debug(message: str) -> None:
-        logger = Logger.get_logger()  # получаем экземпляр Logger
-        logger.logger.debug("*" * 50)
-        logger.logger.debug(message)
-        logger.logger.debug("*" * 50)
+    def debug(message: str):
+        logger = Logger.get_logger().logger
+        logger.debug("*" * 50)
+        logger.debug(message)
+        logger.debug("*" * 50)
 
     @staticmethod
-    def info(message: str) -> None:
-        logger = Logger.get_logger()
+    def info(message: str):
+        logger = Logger.get_logger().logger
         logger.info(message)
 
     @staticmethod
-    def error(message: str) -> None:
-        logger = Logger.get_logger()
+    def error(message: str):
+        logger = Logger.get_logger().logger
         logger.error(message)
