@@ -33,6 +33,9 @@ Need setup next files - config, framework
 * Install required browsers for playwright - playwright install
 * Activation pre-commit - pre-commit install
 
+## Database connection instruction:
+To connect to DB follow next steps:
+https://wiki.andersenlab.com/spaces/PRETTY02/pages/447447438/Database+connection+instruction
 
 ## Run tests:
 * Run one test: "pytest tests/<module_name>/<test_name>"
@@ -40,28 +43,10 @@ Need setup next files - config, framework
 * Run using pytest-xdist: "pytest -n <n>"
 
 
-## Add your files
-
-- push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.andersenlab.com/Andersen/pretty_2.0/pretty-autotests.git
-git branch -M main
-git push -uf origin main
-```
-
 ## Integrate with your tools
 
 - [ ] [Set up project integrations](https://git.andersenlab.com/Andersen/pretty_2.0/pretty-autotests/-/settings/integrations)
 
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
 ## Test and Deploy
 
