@@ -37,10 +37,55 @@ Need setup next files - config, framework
 To connect to DB follow next steps:
 https://wiki.andersenlab.com/spaces/PRETTY02/pages/447447438/Database+connection+instruction
 
+##  UI Tests
+
+Automated UI tests for a web application built with pytest, Playwright, and Allure, following the Page Object Model (POM) pattern.
+
+# Tech Stack
+
+* Python 3.11+
+* pytest — testing framework 
+* Playwright — browser automation
+* Allure — test reporting
+* Qase — test management (via markers)
+* Page Object Model (POM) — test architecture pattern
+
+## Project Structure (example)
+
+project/
+│
+├── framework/
+│   └── ui/
+│       └── pages/
+│           └── example_page.py
+│
+├── tests/
+│   └── example.spec.py
+│
+├── requirements.txt
+├── pytest.ini
+└── README.md
+
+## Markers Used
+
+* @pytest.mark.ui — UI test marker
+* @pytest.mark.qase("US-1.1") — link to Qase test case
+* @allure.suite("Example UI Tests") — Allure test suite
+* @allure.severity(NORMAL) — test severity level
+
+## Architecture
+
+The project follows the Page Object Model (POM) approach:
+* page logic is encapsulated in ExamplePag
+* tests contain only high-level actions
+* UI locators and interactions are not duplicated and stored in exact page class
+
 ## Run tests:
 * Run one test: "pytest tests/<module_name>/<test_name>"
 * Run all tests: "pytest tests/"
 * Run using pytest-xdist: "pytest -n <n>"
+* Run all UI tests: "pytest -m ui"
+* View Allure report: "allure serve allure-results"
 
 
 ## Integrate with your tools
