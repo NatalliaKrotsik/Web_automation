@@ -66,7 +66,7 @@ project/
 ├── requirements.txt
 ├── pytest.ini
 └── README.md
-
+```
 
 ## Architecture
 
@@ -111,6 +111,7 @@ DB_PASS=your_password
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=your_database
+```
 
 The connection string is built dynamically:
 postgresql://DB_USER:DB_PASS@DB_HOST:DB_PORT/DB_NAME
