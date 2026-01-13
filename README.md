@@ -1,6 +1,31 @@
 # PRetty-autotests
 
+UI + API Test Automation | Python • Pytest • Playwright • Poetry
 
+This repository contains a learning-oriented but production-style Automation QA framework for UI and API testing, designed for company internal use and for Automation Engineers who want a clean, scalable, and easy-to-understand solution.
+The framework combines Playwright for UI automation, Pytest for test execution, and Poetry for dependency management, following best industry practices while remaining beginner‑friendly.
+
+📌 Why This Framework?
+
+This framework was created to:
+
+Learn and apply real-world automation architecture
+
+Provide a single solution for UI and API testing
+
+Demonstrate best practices suitable for internal company projects
+
+Be easy to onboard for new Automation Engineers
+
+Scale from simple tests to complex test suites
+
+Key principles: 
+
+✅ Readability over complexity
+
+✅ Explicit configuration
+
+✅ Reusability and maintainability
 
 ## Getting started
 
@@ -37,6 +62,25 @@ Need setup next files - config, framework
 To connect to DB follow next steps:
 https://wiki.andersenlab.com/spaces/PRETTY02/pages/447447438/Database+connection+instruction
 
+## Configuration & Environments
+The framework supports multiple environments:
+
+* dev
+* test
+* prod
+
+Configuration files are stored in the config/ directory and written in YAML / JSON.
+
+Example (config/test.yaml):
+
+base_url: https://test.example.com
+
+api_url: https://api.test.example.com
+
+browser: chromium
+
+headless: true
+
 #  UI Tests
 
 Automated UI tests for a web application built with pytest, Playwright, and Allure, following the Page Object Model (POM) pattern.
@@ -71,9 +115,15 @@ project/
 ## Architecture
 
 The project follows the Page Object Model (POM) approach:
-* page logic is encapsulated in ExamplePag
+* page logic is encapsulated in ExamplePage
 * tests contain only high-level actions
 * UI locators and interactions are not duplicated and stored in exact page class
+
+ How to Add a New Page Object:
+
+* Create a new file in src/pages
+* Inherit from BasePage
+* Keep locators and actions inside the page class only
 
 # API Tests
 ## Technologies & Tools
@@ -122,6 +172,10 @@ Make sure:
 * credentials are correct
 * test data exists or is expected to appear during execution
 
+## How to Add New Tests
+Create a new test file under tests/ui or tests/api
+Use existing fixtures (page, authenticated_user, test_data)
+Apply markers if needed
 
 ## Markers Used
 * `@pytest.mark.api` — marks the test as an API test
@@ -138,5 +192,13 @@ Make sure:
 * View Allure report: "allure serve allure-results"
 * Run the test manually via pytest: poetry run pytest path/to/test_file.py
 
+## Target Audience
 
+* Automation QA Engineers
+* Engineers onboarding into UI/API automation
+* Internal QA teams
+
+## License
+
+Internal company project / learning framework.
 
