@@ -1,0 +1,18 @@
+env_name: prod
+
+ui:
+  base_url: https://www.example.com
+  browser: chromium
+  headless: true
+  slow_mo: 0
+
+api:
+  base_url: https://api.example.com
+  timeout: 5
+
+timeouts:
+  page_load: 15
+  assertion: 3
+
+features:
+  enable_experimental: false
