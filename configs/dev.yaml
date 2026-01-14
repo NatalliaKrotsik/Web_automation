@@ -1,0 +1,18 @@
+env_name: dev
+
+ui:
+  base_url: https://dev.example.com
+  browser: chromium
+  headless: false
+  slow_mo: 300
+
+api:
+  base_url: https://api.dev.example.com
+  timeout: 10
+
+timeouts:
+  page_load: 30
+  assertion: 5
+
+features:
+  enable_experimental: true
