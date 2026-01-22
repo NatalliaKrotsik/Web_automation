@@ -65,9 +65,12 @@ https://wiki.andersenlab.com/spaces/PRETTY02/pages/447447438/Database+connection
 ## Configuration & Environments
 The framework supports multiple environments:
 
-* dev
-* test
-* prod
+* dev python
+* dev go
+* test python
+* test go
+* prod python
+* prod go
 
 Configuration files are stored in the config/ directory and written in YAML / JSON.
 
@@ -105,9 +108,10 @@ project/
 │           └── example_page.py
 │
 ├── tests/
-│   └── example.spec.py
+│   └── example.test.py
 │
-├── requirements.txt
+├── .pyproject.toml
+├── .pre-commit-config.yaml
 ├── pytest.ini
 └── README.md
 ```
