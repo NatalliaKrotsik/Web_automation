@@ -1,13 +1,13 @@
 env_name: dev
 
 ui:
-  base_url: https://dev.example.com
+  base_url: https://dev.pretty-py.andersenlab.dev  
   browser: chromium
   headless: false
   slow_mo: 300
 
 api:
-  base_url: https://api.dev.example.com
+  base_url: https://api-dev.pretty-py.andersenlab.dev  
   timeout: 10
 
 timeouts:

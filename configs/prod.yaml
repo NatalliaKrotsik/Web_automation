@@ -1,13 +1,13 @@
 env_name: prod
 
 ui:
-  base_url: https://www.example.com
+  base_url: https://prod.pretty-py.andersenlab.dev  
   browser: chromium
   headless: true
   slow_mo: 0
 
 api:
-  base_url: https://api.example.com
+  base_url: https://api-prod.pretty-py.andersenlab.dev 
   timeout: 5
 
 timeouts:
