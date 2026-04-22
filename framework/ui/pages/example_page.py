@@ -1,6 +1,7 @@
 import os
 from framework.ui.core.base_page import BasePage
 from framework.ui.elements.button import Button
+from framework.env_manager import EnvManager
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +14,7 @@ class ExamplePage(BasePage):
     LOGO = "//*[@id='root']/div/header/div/div[1]/a"
 
     def __init__(self, page):
-        super().__init__(page, os.getenv("BASE_URL_DEV"))
+        super().__init__(page, EnvManager.get_config()["ui"]["base_url"])
         self.page = page
         self.logo = page.locator(self.LOGO)
         self.login_btn = Button(page, self.LOGIN_BTN)

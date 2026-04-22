@@ -9,11 +9,12 @@ class BrowserManager:
             cls._instance = super(BrowserManager, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, browser_type="chromium", headless=True):
+    def __init__(self, browser_type="chromium", headless=True, slow_mo: int = 0):
         if hasattr(self, "initialized") and self.initialized:
             return
         self.browser_type = browser_type
         self.headless = headless
+        self.slow_mo = slow_mo
         self.playwright = None
         self.browser = None
         self.context = None
@@ -24,12 +25,16 @@ class BrowserManager:
         if not self.playwright:
             self.playwright = sync_playwright().start()
         if not self.browser:
+            launch_options = {
+                "headless": self.headless,
+                "slow_mo": self.slow_mo
+            }
             if self.browser_type == "chromium":
-                self.browser = self.playwright.chromium.launch(headless=self.headless)
+                self.browser = self.playwright.chromium.launch(**launch_options)
             elif self.browser_type == "firefox":
-                self.browser = self.playwright.firefox.launch(headless=self.headless)
+                self.browser = self.playwright.firefox.launch(**launch_options)
             elif self.browser_type == "webkit":
-                self.browser = self.playwright.webkit.launch(headless=self.headless)
+                self.browser = self.playwright.webkit.launch(**launch_options)
             else:
                 raise ValueError(f"Unsupported browser type: {self.browser_type}")
 

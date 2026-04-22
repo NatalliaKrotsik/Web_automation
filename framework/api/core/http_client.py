@@ -4,7 +4,7 @@ import requests
 import json
 import allure
 from typing import Any, Dict, Optional
-
+from framework.env_manager import EnvManager
 from framework.logger.logger import Logger
 
 load_dotenv()
@@ -18,7 +18,7 @@ class HttpClient:
 
     def __init__(self, default_headers: Optional[Dict[str, str]] = None):
         # Normalize base URL
-        self.base_url = os.getenv("API_URL_DEV")
+        self.base_url = EnvManager.get_config()["api"]["base_url"]
         # Initialize a session
         self.session = requests.Session()
         if default_headers:
