@@ -1,4 +1,4 @@
-from ast import Dict
+from typing import Dict
 from assertpy import assert_that
 import pytest
 import os
@@ -20,7 +20,7 @@ def password_dev() -> str:
 def get_tokens(email_dev, password_dev) -> Dict:
     """Retrieves tokens from the Auth API."""
     auth_api = AuthAPI()
-    tokens = auth_api.authorization(email="053xp@tohru.org", password="Test@1234")
+    tokens = auth_api.authorization(email=email_dev, password=password_dev)
     assert_that(tokens.status_code, "Sign in error.").is_equal_to(200)
     return tokens.json()
 
