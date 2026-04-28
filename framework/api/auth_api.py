@@ -27,11 +27,5 @@ class AuthAPI(HttpClient):
         return auth
 
     @allure.step("User logout step.")
-    def sign_out_user(self, refresh_token: str) -> requests.Response:
-        """
-        Sign out user by using refresh token.
-
-        """
-        return self.post(
-            path=self.endpoint + "sign-out", json_body={"refresh": refresh_token}
-        )
+    def sign_out_user(self, access_token: str) -> requests.Response:
+        return self.post(path=self.endpoint + "sign-out", json_body={"accessToken": access_token})
