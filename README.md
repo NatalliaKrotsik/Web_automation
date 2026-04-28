@@ -63,7 +63,7 @@ To connect to DB follow next steps:
 https://wiki.andersenlab.com/spaces/PRETTY02/pages/447447438/Database+connection+instruction
 
 ## Configuration & Environments
-The framework supports multiple environments:
+Environment config is loaded automatically via `EnvManager` which reads YAML config files from `configs/` and secrets from `env/.env.<environment>` files.
 
 * dev python
 * dev go
@@ -142,7 +142,7 @@ The project follows the Page Object Model (POM) approach:
 
 The test requires valid authentication tokens.
 
-A pytest fixture `get_tokens` is used to obtain the required authorization tokens.
+A pytest fixture `auth_tokens` is used to obtain the required authorization tokens.
 Fixtures are stored in api\conftest.py
 
 # Database Client Tests
@@ -189,12 +189,12 @@ Apply markers if needed
 * `@allure.severity(NORMAL)` — test severity level
 
 ## Run tests:
-* Run one test: "pytest tests/<module_name>/<test_name>"
-* Run all tests: "pytest tests/"
-* Run using pytest-xdist: "pytest -n <n>"
-* Run all UI tests: "pytest -m ui"
+* Run one test: "poetry run pytest tests/<module_name>/<test_name> --env=dev"
+* Run all tests: "poetry run pytest tests/ --env=dev"
+* Run using pytest-xdist: "poetry run pytest -n <n> --env=dev"
+* Run all UI tests: "poetry run pytest -m ui --env=dev"
 * View Allure report: "allure serve allure-results"
-* Run the test manually via pytest: poetry run pytest path/to/test_file.py
+* Run the test manually via pytest: poetry run pytest path/to/test_file.py --env=dev
 
 ## Target Audience
 
