@@ -47,7 +47,7 @@ class EnvManager:
             raise FileNotFoundError(f"Config file '{yaml_file}' not found")
 
         with open(yaml_file, "r") as f:
-            data = yaml.safe_load(f)
+            data = yaml.safe_load(f) or {}
 
         ui_data = data.get("ui", {})
         api_data = data.get("api", {})
