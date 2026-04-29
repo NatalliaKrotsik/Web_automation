@@ -1,6 +1,6 @@
 {
   "compression": "zip",
-  "format": "{level} [{asctime}] {message}",
+  "format": "{levelname} [{asctime}] {message}",
   "level": "WARNING",
   "retention": "1 week",
   "rotation": "1 day"

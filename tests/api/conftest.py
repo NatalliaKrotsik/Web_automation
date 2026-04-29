@@ -1,35 +1,27 @@
-from ast import Dict
-from assertpy import assert_that
+from typing import Dict
 import pytest
-import os
 
 from framework.api.auth_api import AuthAPI
+from framework.env_manager import EnvManager
 
 
-@pytest.fixture
-def email_dev() -> str:
-    return os.getenv("USER_EMAIL_DEV")
-
-
-@pytest.fixture
-def password_dev() -> str:
-    return os.getenv("USER_PASSWORD_DEV")
-
-
-@pytest.fixture
-def get_tokens(email_dev, password_dev) -> Dict:
-    """Retrieves tokens from the Auth API."""
+@pytest.fixture(scope="session")
+def auth_tokens() -> Dict:
+    """Retrieves authentication tokens from the Auth API."""
     auth_api = AuthAPI()
-    tokens = auth_api.authorization(email="053xp@tohru.org", password="Test@1234")
-    assert_that(tokens.status_code, "Sign in error.").is_equal_to(200)
+    tokens = auth_api.authorization(
+        email=EnvManager.get("USER_EMAIL_DEV"),
+        password=EnvManager.get("USER_PASSWORD_DEV")
+    )
     return tokens.json()
 
 
-@pytest.fixture
-def email_admin() -> str:
-    return os.getenv("ADMIN_USER_EMAIL")
-
-
-@pytest.fixture
-def password_admin() -> str:
-    return os.getenv("ADMIN_USER_PASSWORD")
+@pytest.fixture(scope="session")
+def admin_auth_tokens() -> Dict:
+    """Retrieves admin authentication tokens from the Auth API."""
+    auth_api = AuthAPI()
+    tokens = auth_api.authorization(
+        email=EnvManager.get("ADMIN_USER_EMAIL"),
+        password=EnvManager.get("ADMIN_USER_PASSWORD")
+    )
+    return tokens.json()
