@@ -1,10 +1,11 @@
 variables:
-  USER_EMAIL_DEV: "053xp@tohru.org"
-  USER_PASSWORD_DEV: "Test@1234"
-  ADMIN_USER_EMAIL: "system_admin@prettybank.com"
-  ADMIN_USER_PASSWORD: "SystemSuperAdmin1!"
   BASE_URL_DEV: "https://dev.pretty-py.andersenlab.dev"
   API_URL_DEV: "https://api-dev.pretty-py.andersenlab.dev"
+  PYTEST_WORKERS: "4"
+  ENV: "dev"
+  ALLURE_VERSION: "2.27.0"
+# Credentials stored in GitLab CI/CD Settings → Variables (masked):
+# USER_EMAIL_DEV, USER_PASSWORD_DEV, ADMIN_USER_EMAIL, ADMIN_USER_PASSWORD
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -18,26 +19,23 @@ stages:
   - reports
   - deploy
 
-before_script:
-  - pip install poetry
-  - poetry config virtualenvs.in-project true
-  - poetry install --no-root --no-interaction --no-ansi
-  - poetry run playwright install
-  - poetry run playwright install-deps
-
 ############################
 # DEFAULT TEST JOB TEMPLATE
 ############################
 .default_test_job: &default_test_job
   stage: testing
   image: python:3.12.3-slim
-  allow_failure: true
+  allow_failure: false
+  before_script:
+    - pip install poetry
+    - poetry config virtualenvs.in-project true
+    - poetry install --no-root --no-interaction --no-ansi
+    - poetry run playwright install chromium
+    - poetry run playwright install-deps chromium
   artifacts:
     expire_in: 1 day
   rules:
     - when: always
-  script:
-    - poetry run pytest --alluredir=$ALLURE_DIR $TEST_PATH -n=4
 
 ############################
 # UI TESTS
@@ -47,6 +45,8 @@ ui_tests:
   variables:
     TEST_PATH: ./tests/ui
     ALLURE_DIR: allure-results-ui
+  script:
+    - poetry run pytest --alluredir=$ALLURE_DIR $TEST_PATH -n=$PYTEST_WORKERS --env=$ENV
   artifacts:
     paths:
       - allure-results-ui
@@ -59,6 +59,8 @@ api_tests:
   variables:
     TEST_PATH: ./tests/api
     ALLURE_DIR: allure-results-api
+  script:
+    - poetry run pytest --alluredir=$ALLURE_DIR $TEST_PATH -n=$PYTEST_WORKERS --env=$ENV
   artifacts:
     paths:
       - allure-results-api
@@ -68,18 +70,21 @@ api_tests:
 ############################
 history_copy:
   stage: reports
-  image: ubuntu:latest
+  image: ubuntu:22.04
   dependencies: []
   before_script: []
   script:
-    - apt update && apt install -y curl unzip
-    - curl --fail --location \
-      --output artifacts.zip \
-      "https://git.andersenlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/main/download?job=pages&job_token=$CI_JOB_TOKEN" \
-      || echo "No previous Pages artifacts found"
-    - unzip artifacts.zip || echo "Nothing to unzip"
+    - apt-get update -qq && apt-get install -y -qq curl unzip
     - mkdir -p allure-history
-    - cp -r ./public/history/* allure-history/ || true
+    - curl --fail --location --output artifacts.zip "https://git.andersenlab.com/api/v4/projects/${CI_PROJECT_ID}/jobs/artifacts/main/download?job=pages&job_token=${CI_JOB_TOKEN}" || echo "No previous Pages artifacts found, this may be the first run"
+    - |
+      if [ -f artifacts.zip ]; then
+        unzip -q artifacts.zip
+        cp -r ./public/history/* allure-history/ 2>/dev/null || echo "No history folder inside artifact"
+      else
+        echo "No artifacts.zip — skipping history copy"
+      fi
+    - ls -la allure-history/ || echo "allure-history is empty"
   allow_failure: true
   artifacts:
     paths:
@@ -93,30 +98,38 @@ history_copy:
 ############################
 allure_report:
   stage: reports
-  image: frankescobar/allure-cli
+  image: eclipse-temurin:17-jdk-alpine
   dependencies:
     - ui_tests
     - api_tests
     - history_copy
-  before_script: []
+  before_script:
+    - apk add --no-cache wget tar
+    - wget -q "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/allure-${ALLURE_VERSION}.tgz"
+    - tar -zxf allure-${ALLURE_VERSION}.tgz
+    - ln -s "$(pwd)/allure-${ALLURE_VERSION}/bin/allure" /usr/local/bin/allure
+    - allure --version
   script:
-    - mkdir merged-results
-    - cp -r allure-results-ui/* merged-results/ || true
-    - cp -r allure-results-api/* merged-results/ || true
+    - mkdir -p merged-results
+    - cp -r allure-results-ui/* merged-results/ 2>/dev/null || echo "No UI results"
+    - cp -r allure-results-api/* merged-results/ 2>/dev/null || echo "No API results"
     - mkdir -p merged-results/history
-    - cp -r allure-history/* merged-results/history/ || true
+    - cp -r allure-history/* merged-results/history/ 2>/dev/null || echo "No history"
     - allure generate -c merged-results -o allure-report
     - ls -la allure-report
   artifacts:
     paths:
       - allure-report
     expire_in: 1 week
+  rules:
+    - when: always
 
 ############################
 # DEPLOY TO PAGES
 ############################
 pages:
   stage: deploy
+  image: alpine:latest
   dependencies:
     - allure_report
   before_script: []
