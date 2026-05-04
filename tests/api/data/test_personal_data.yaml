@@ -1,0 +1,152 @@
+# LP-353 — US-1.1.1 Input personal data
+#
+# Pre-conditions (LP-353):
+#   Fill all fields with valid data, change only the field under test.
+#   Date format: DD\MM\YYYY (backslash) — this is what the API expects.
+#   The UI shows DD/MM/YYYY to the user but converts to backslash before sending.
+
+valid_baseline:
+  first_name:  "Łódź"
+  middle_name: "środa"
+  last_name:   "Wiesław"
+  passport_id: "5429469DIFH7799"
+  birth_date:  "23\\10\\2025"
+
+# ── First Name ───────────────────────────────────────────────────────────────
+# Steps 1, 2, 15
+
+first_name:
+  valid:
+    - id: polish_characters
+      value: "Łódź"
+      note: "Step 1 — Polish chars"
+    - id: different_register
+      value: "pavel"
+      note: "Step 1 — lowercase, saved as Pavel by DB"
+    - id: hyphen
+      value: "Anna-Maria"
+      note: "Step 1 — hyphen allowed"
+    - id: boundary_30
+      value: "ŁódźŁódźŁódźŁ-dźŁódźŁódźŁódźŁó"
+      note: "Step 1 — exactly 30 chars (max boundary)"
+
+  invalid:
+    - id: cyrillic
+      value: "енот"
+      note: "Step 2 — Cyrillic rejected, no error msg specified in LP-353"
+    - id: blank
+      value: " "
+      note: "Step 15 — blank blocks continue, no error msg specified in LP-353"
+
+# ── Last Name ────────────────────────────────────────────────────────────────
+# Steps 3, 4, 17
+
+last_name:
+  valid:
+    - id: polish_characters
+      value: "Wiesław"
+      note: "Step 3 — Polish chars"
+    - id: different_register
+      value: "kowalski"
+      note: "Step 3 — lowercase, saved as Kowalski by DB"
+    - id: hyphen
+      value: "Nowak-Kowalski"
+      note: "Step 3 — hyphen allowed"
+    - id: boundary_30
+      value: "ŁódźŁódźŁódźŁ-dźŁódźŁódźŁódźŁó"
+      note: "Step 3 — exactly 30 chars (max boundary)"
+
+  invalid:
+    - id: cyrillic
+      value: "енот"
+      expected_error: "Last name must contain letters from the Latin alphabet or Polish national characters."
+      note: "Step 4 — Cyrillic rejected, LP-353 specifies exact error message"
+    - id: blank
+      value: " "
+      note: "Step 17 — blank blocks continue, no error msg specified in LP-353"
+
+# ── Middle Name ──────────────────────────────────────────────────────────────
+# Steps 5, 6, 16
+
+middle_name:
+  valid:
+    - id: polish_characters
+      value: "środa"
+      note: "Step 5 — Polish chars"
+    - id: different_register
+      value: "jan"
+      note: "Step 5 — lowercase, saved as Jan by DB"
+    - id: hyphen
+      value: "Jan-Piotr"
+      note: "Step 5 — hyphen allowed"
+    - id: boundary_30
+      value: "ŁódźŁódźŁódźŁ-dźŁódźŁódźŁódźŁó"
+      note: "Step 5 — exactly 30 chars (max boundary)"
+    - id: null_accepted
+      value: null
+      note: "Step 16 — middle name is optional, null/omitted must be accepted"
+
+  invalid:
+    - id: cyrillic
+      value: "енот"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+      note: "Step 6 — Cyrillic rejected, LP-353 specifies exact error message"
+
+# ── Passport ID ──────────────────────────────────────────────────────────────
+# Steps 7, 8, 9, 18
+
+passport_id:
+  valid:
+    - id: boundary_20
+      value: "FHRT45G6Y6HYERNF56OP"
+      note: "Step 7 — capital letters + digits, max boundary 20 chars"
+    - id: boundary_7
+      value: "FGHR345"
+      note: "Step 9 — min boundary 7 chars"
+
+  invalid:
+    - id: lowercase
+      value: "982979gfI000808877IF"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+      note: "Step 8 — lowercase rejected, LP-353 specifies exact error message"
+    - id: blank
+      value: " "
+      note: "Step 18 — blank blocks continue, no error msg specified in LP-353"
+
+# ── Birth Date ───────────────────────────────────────────────────────────────
+# Steps 10, 12, 13, 14
+# Note: API expects DD\MM\YYYY (backslash). UI shows DD/MM/YYYY but converts before sending.
+# Note: Step 11 (empty — button inactive) is UI-only, skipped pending MQA clarification.
+
+birth_date:
+  valid:
+    - id: valid_date
+      value: "21\\02\\1987"
+      note: "Step 10 — valid date, UI shows 21/02/1987"
+    - id: leap_year
+      value: "29\\02\\2020"
+      note: "Step 14 — leap year, Feb 29 accepted"
+
+  invalid:
+    - id: wrong_format
+      value: "2000\\02\\23"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+      note: "Step 12 — YYYY/MM/DD format rejected"
+    - id: month_13
+      value: "20\\13\\2000"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+      note: "Step 13 — month 13 rejected"
+    - id: non_leap_feb29
+      value: "29\\02\\2019"
+      expected_error: "Invalid date."
+      note: "Step 14 — non-leap year Feb 29 rejected"
+
+# ── Happy Path ───────────────────────────────────────────────────────────────
+# Step 19
+
+happy_path:
+  first_name:  "Łódź-PAveloiyrhtnfhcgfytndjrio"
+  middle_name: "Łódź-PAveloiyrhtnfhcgfytndjrio"
+  last_name:   "Łódź-PAveloiyrhtnfhcgfytndjrio"
+  passport_id: "5429469DIFH7711"
+  birth_date:  "23\\10\\2025"
