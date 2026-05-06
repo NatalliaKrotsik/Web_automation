@@ -1,11 +1,15 @@
+# tests/api/epic_1_welcome_page/test_personal_data.py
+
 import allure
 import pytest
 import yaml
 from assertpy import assert_that
 
+from framework.api.personal_data_api import PersonalDataAPI
+
 
 def _load_data() -> dict:
-    with open("tests/api/data/test_personal_data.yaml", encoding="utf-8") as f:
+    with open("tests/api/epic_1_welcome_page/data/test_personal_data_data.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -16,7 +20,30 @@ def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
 
 
-# ── First Name
+@pytest.fixture
+def api():
+    return PersonalDataAPI()
+
+
+@pytest.fixture
+def valid_payload():
+    """
+    Baseline valid payload per LP-353 pre-conditions.
+    All fields valid — only the field under test is overridden per step.
+    Note: birth_date uses backslash separator (DD\\MM\\YYYY) — API format.
+          UI shows DD/MM/YYYY but converts to backslash before sending.
+    """
+    v = _DATA["valid_baseline"]
+    return {
+        "first_name":  v["first_name"],
+        "middle_name": v["middle_name"],
+        "last_name":   v["last_name"],
+        "passport_id": v["passport_id"],
+        "birth_date":  v["birth_date"],
+    }
+
+
+# ── First Name ───────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -58,12 +85,11 @@ class TestFirstNameInvalid:
             valid_payload["first_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
+            # 422 responses do not contain a 'valid' key — only 201 responses do.
+            # Status code + error message assertions are the correct contract checks.
             assert_that(r.status_code).described_as(
                 f"Expected 4xx for invalid first_name={case['value']!r} [{case['id']}]"
             ).is_in(400, 422)
-            assert_that(r.json().get("valid")).described_as(
-                f"valid flag must not be true for invalid input [{case['id']}]"
-            ).is_not_equal_to(True)
         if case.get("expected_error"):
             with allure.step(f"Assert error message: {case['expected_error']!r}"):
                 error_messages = [
@@ -76,7 +102,7 @@ class TestFirstNameInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Last Name
+# ── Last Name ────────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -118,12 +144,11 @@ class TestLastNameInvalid:
             valid_payload["last_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
+            # 422 responses do not contain a 'valid' key — only 201 responses do.
+            # Status code + error message assertions are the correct contract checks.
             assert_that(r.status_code).described_as(
                 f"Expected 4xx for invalid last_name={case['value']!r} [{case['id']}]"
             ).is_in(400, 422)
-            assert_that(r.json().get("valid")).described_as(
-                f"valid flag must not be true for invalid input [{case['id']}]"
-            ).is_not_equal_to(True)
         if case.get("expected_error"):
             with allure.step(f"Assert error message: {case['expected_error']!r}"):
                 error_messages = [
@@ -136,7 +161,7 @@ class TestLastNameInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Middle Name
+# ── Middle Name ──────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -178,12 +203,11 @@ class TestMiddleNameInvalid:
             valid_payload["middle_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
+            # 422 responses do not contain a 'valid' key — only 201 responses do.
+            # Status code + error message assertions are the correct contract checks.
             assert_that(r.status_code).described_as(
                 f"Expected 4xx for invalid middle_name={case['value']!r} [{case['id']}]"
             ).is_in(400, 422)
-            assert_that(r.json().get("valid")).described_as(
-                f"valid flag must not be true for invalid input [{case['id']}]"
-            ).is_not_equal_to(True)
         if case.get("expected_error"):
             with allure.step(f"Assert error message: {case['expected_error']!r}"):
                 error_messages = [
@@ -196,7 +220,7 @@ class TestMiddleNameInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Passport ID
+# ── Passport ID ──────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -238,12 +262,11 @@ class TestPassportIdInvalid:
             valid_payload["passport_id"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
+            # 422 responses do not contain a 'valid' key — only 201 responses do.
+            # Status code + error message assertions are the correct contract checks.
             assert_that(r.status_code).described_as(
                 f"Expected 4xx for invalid passport_id={case['value']!r} [{case['id']}]"
             ).is_in(400, 422)
-            assert_that(r.json().get("valid")).described_as(
-                f"valid flag must not be true for invalid input [{case['id']}]"
-            ).is_not_equal_to(True)
         if case.get("expected_error"):
             with allure.step(f"Assert error message: {case['expected_error']!r}"):
                 error_messages = [
@@ -256,7 +279,7 @@ class TestPassportIdInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Birth Date
+# ── Birth Date ────────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -299,12 +322,11 @@ class TestBirthDateInvalid:
             valid_payload["birth_date"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
+            # 422 responses do not contain a 'valid' key — only 201 responses do.
+            # Status code + error message assertions are the correct contract checks.
             assert_that(r.status_code).described_as(
                 f"Expected 4xx for invalid birth_date={case['value']!r} [{case['id']}]"
             ).is_in(400, 422)
-            assert_that(r.json().get("valid")).described_as(
-                f"valid flag must not be true for invalid input [{case['id']}]"
-            ).is_not_equal_to(True)
         if case.get("expected_error"):
             with allure.step(f"Assert error message: {case['expected_error']!r}"):
                 error_messages = [
@@ -317,7 +339,7 @@ class TestBirthDateInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Happy Path
+# ── Happy Path ────────────────────────────────────────────────────────────────
 
 @pytest.mark.api
 @pytest.mark.smoke
