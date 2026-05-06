@@ -5,11 +5,9 @@ import pytest
 import yaml
 from assertpy import assert_that
 
-from framework.api.personal_data_api import PersonalDataAPI
-
 
 def _load_data() -> dict:
-    with open("tests/api/epic_1_welcome_page/data/test_personal_data_data.yaml", encoding="utf-8") as f:
+    with open("tests/api/epic_1_welcome_page/data/test_personal_data.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
@@ -18,30 +16,6 @@ _DATA = _load_data()
 
 def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
-
-
-@pytest.fixture
-def api():
-    return PersonalDataAPI()
-
-
-@pytest.fixture
-def valid_payload():
-    """
-    Baseline valid payload per LP-353 pre-conditions.
-    All fields valid — only the field under test is overridden per step.
-    Note: birth_date uses backslash separator (DD\\MM\\YYYY) — API format.
-          UI shows DD/MM/YYYY but converts to backslash before sending.
-    """
-    v = _DATA["valid_baseline"]
-    return {
-        "first_name":  v["first_name"],
-        "middle_name": v["middle_name"],
-        "last_name":   v["last_name"],
-        "passport_id": v["passport_id"],
-        "birth_date":  v["birth_date"],
-    }
-
 
 # ── First Name ───────────────────────────────────────────────────────────────
 

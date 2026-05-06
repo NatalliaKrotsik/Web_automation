@@ -5,7 +5,7 @@ from framework.api.personal_data_api import PersonalDataAPI
 
 
 def _load_baseline() -> dict:
-    with open("tests/api/data/test_personal_data.yaml", encoding="utf-8") as f:
+    with open("tests/api/epic_1_welcome_page/data/test_personal_data.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)["valid_baseline"]
 
 
