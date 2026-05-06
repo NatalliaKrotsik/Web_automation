@@ -3,8 +3,6 @@ import pytest
 import yaml
 from assertpy import assert_that
 
-from framework.api.personal_data_api import PersonalDataAPI
-
 
 def _load_data() -> dict:
     with open("tests/api/data/test_personal_data.yaml", encoding="utf-8") as f:
@@ -12,31 +10,13 @@ def _load_data() -> dict:
 
 
 _DATA = _load_data()
-_BASELINE = _DATA["valid_baseline"]
 
 
 def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
 
 
-@pytest.fixture(scope="function")
-def api() -> PersonalDataAPI:
-    return PersonalDataAPI()
-
-
-@pytest.fixture(scope="function")
-def valid_payload() -> dict:
-    """Baseline valid payload per LP-353 pre-conditions."""
-    return {
-        "first_name":  _BASELINE["first_name"],
-        "middle_name": _BASELINE["middle_name"],
-        "last_name":   _BASELINE["last_name"],
-        "passport_id": _BASELINE["passport_id"],
-        "birth_date":  _BASELINE["birth_date"],
-    }
-
-
-# ── First Name 
+# ── First Name
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -46,7 +26,6 @@ def valid_payload() -> dict:
 class TestFirstNameValid:
     """LP-353 Step 1 — first name accepts Polish characters, mixed register, hyphen, 30-char boundary."""
 
-    @allure.title("First name — valid input accepted")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("first_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
@@ -71,7 +50,6 @@ class TestFirstNameValid:
 class TestFirstNameInvalid:
     """LP-353 Steps 2, 15 — Cyrillic and blank first name are rejected."""
 
-    @allure.title("First name — invalid input rejected")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("first_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
@@ -98,7 +76,7 @@ class TestFirstNameInvalid:
                 ).contains(case["expected_error"])
 
 
-# ── Last Name 
+# ── Last Name
 
 @pytest.mark.api
 @pytest.mark.regression
@@ -108,7 +86,6 @@ class TestFirstNameInvalid:
 class TestLastNameValid:
     """LP-353 Step 3 — last name accepts Polish characters, mixed register, hyphen, 30-char boundary."""
 
-    @allure.title("Last name — valid input accepted")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("last_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
@@ -133,7 +110,6 @@ class TestLastNameValid:
 class TestLastNameInvalid:
     """LP-353 Steps 4, 17 — Cyrillic and blank last name are rejected; Cyrillic returns exact LP-353 error message."""
 
-    @allure.title("Last name — invalid input rejected")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("last_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
@@ -170,7 +146,6 @@ class TestLastNameInvalid:
 class TestMiddleNameValid:
     """LP-353 Steps 5, 16 — middle name accepts Polish characters, mixed register, hyphen, 30-char boundary, and null (field is optional)."""
 
-    @allure.title("Middle name — valid input accepted")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("middle_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
@@ -195,7 +170,6 @@ class TestMiddleNameValid:
 class TestMiddleNameInvalid:
     """LP-353 Step 6 — Cyrillic middle name is rejected with exact LP-353 error message."""
 
-    @allure.title("Middle name — invalid input rejected")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("middle_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
@@ -232,7 +206,6 @@ class TestMiddleNameInvalid:
 class TestPassportIdValid:
     """LP-353 Steps 7, 9 — passport ID accepts capital Latin letters + digits at max (20) and min (7) boundaries."""
 
-    @allure.title("Passport ID — valid input accepted")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("passport_id", "valid"))
     def test_valid_input(self, api, valid_payload, case):
@@ -257,7 +230,6 @@ class TestPassportIdValid:
 class TestPassportIdInvalid:
     """LP-353 Steps 8, 18 — lowercase and blank passport ID are rejected."""
 
-    @allure.title("Passport ID — invalid input rejected")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("passport_id", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
@@ -282,6 +254,8 @@ class TestPassportIdInvalid:
                 assert_that(error_messages).described_as(
                     f"Response must contain LP-353 error text [{case['id']}]"
                 ).contains(case["expected_error"])
+
+
 # ── Birth Date
 
 @pytest.mark.api
@@ -293,7 +267,6 @@ class TestBirthDateValid:
     """LP-353 Steps 10, 14 — valid date and leap year Feb 29 are accepted.
     Note: API expects DD\\MM\\YYYY (backslash). Step 11 (empty field) is UI-only, skipped pending MQA clarification."""
 
-    @allure.title("Birth date — valid input accepted")
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("birth_date", "valid"))
     def test_valid_input(self, api, valid_payload, case):
@@ -318,7 +291,6 @@ class TestBirthDateValid:
 class TestBirthDateInvalid:
     """LP-353 Steps 12, 13, 14 — wrong format, month 13, and non-leap Feb 29 are rejected."""
 
-    @allure.title("Birth date — invalid input rejected")
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("birth_date", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
