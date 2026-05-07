@@ -6,6 +6,8 @@ import yaml
 from assertpy import assert_that
 
 
+#  Data loading 
+
 def _load_data() -> dict:
     with open("tests/api/epic_1_welcome_page/data/test_personal_data.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)
@@ -17,15 +19,56 @@ _DATA = _load_data()
 def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
 
-# ── First Name ───────────────────────────────────────────────────────────────
 
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
+# Pytest marks (pytest-native only — Allure labels go on the base class) 
+
+pytestmark = [pytest.mark.api, pytest.mark.regression]
+
+
+# Shared base class
+
+@allure.parent_suite("API Tests")
+@allure.suite("Registration")
+@allure.sub_suite("US-1.1.1 Personal Info")
+class _PersonalInfoBase:
+    """
+    Shared Allure three-level hierarchy for all personal-info test classes.
+    Subclasses inherit labels without re-declaring them.
+    """
+
+
+# Helpers
+
+def _assert_valid(r, value, case_id):
+    assert_that(r.status_code).described_as(
+        f"Expected 201 for value={value!r} [{case_id}]"
+    ).is_equal_to(201)
+    assert_that(r.json()["valid"]).described_as(
+        f"Response valid flag should be true [{case_id}]"
+    ).is_true()
+
+
+def _assert_invalid(r, value, case_id, expected_error=None):
+    assert_that(r.status_code).described_as(
+        f"Expected 4xx for value={value!r} [{case_id}]"
+    ).is_in(400, 422)
+    if expected_error:
+        error_messages = [
+            m["message"]
+            for errors in r.json().get("details", {}).values()
+            for m in errors
+        ]
+        assert_that(error_messages).described_as(
+            f"Response must contain LP-353 error text [{case_id}]"
+        ).contains(expected_error)
+
+
+# First Name
+
 @allure.story("First name")
-class TestFirstNameValid:
-    """LP-353 Step 1 — first name accepts Polish characters, mixed register, hyphen, 30-char boundary."""
+@pytest.mark.qase(353)
+class TestFirstName(_PersonalInfoBase):
+    """LP-353 Steps 1, 2, 15 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("first_name", "valid"))
@@ -35,21 +78,7 @@ class TestFirstNameValid:
             valid_payload["first_name"] = case["value"]
         with allure.step("Submit personal info — assert 201 and valid=true"):
             r = api.submit_personal_info(**valid_payload)
-            assert_that(r.status_code).described_as(
-                f"Expected 201 for first_name={case['value']!r} [{case['id']}]"
-            ).is_equal_to(201)
-            assert_that(r.json()["valid"]).described_as(
-                f"Response valid flag should be true [{case['id']}]"
-            ).is_true()
-
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
-@allure.story("First name")
-class TestFirstNameInvalid:
-    """LP-353 Steps 2, 15 — Cyrillic and blank first name are rejected."""
+            _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("first_name", "invalid"))
@@ -59,32 +88,15 @@ class TestFirstNameInvalid:
             valid_payload["first_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
-            # 422 responses do not contain a 'valid' key — only 201 responses do.
-            # Status code + error message assertions are the correct contract checks.
-            assert_that(r.status_code).described_as(
-                f"Expected 4xx for invalid first_name={case['value']!r} [{case['id']}]"
-            ).is_in(400, 422)
-        if case.get("expected_error"):
-            with allure.step(f"Assert error message: {case['expected_error']!r}"):
-                error_messages = [
-                    m["message"]
-                    for errors in r.json().get("details", {}).values()
-                    for m in errors
-                ]
-                assert_that(error_messages).described_as(
-                    f"Response must contain LP-353 error text [{case['id']}]"
-                ).contains(case["expected_error"])
+            _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
 
-# ── Last Name ────────────────────────────────────────────────────────────────
+# Last Name
 
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
 @allure.story("Last name")
-class TestLastNameValid:
-    """LP-353 Step 3 — last name accepts Polish characters, mixed register, hyphen, 30-char boundary."""
+@pytest.mark.qase(353)
+class TestLastName(_PersonalInfoBase):
+    """LP-353 Steps 3, 4, 17 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic (with exact error) and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("last_name", "valid"))
@@ -94,21 +106,7 @@ class TestLastNameValid:
             valid_payload["last_name"] = case["value"]
         with allure.step("Submit personal info — assert 201 and valid=true"):
             r = api.submit_personal_info(**valid_payload)
-            assert_that(r.status_code).described_as(
-                f"Expected 201 for last_name={case['value']!r} [{case['id']}]"
-            ).is_equal_to(201)
-            assert_that(r.json()["valid"]).described_as(
-                f"Response valid flag should be true [{case['id']}]"
-            ).is_true()
-
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
-@allure.story("Last name")
-class TestLastNameInvalid:
-    """LP-353 Steps 4, 17 — Cyrillic and blank last name are rejected; Cyrillic returns exact LP-353 error message."""
+            _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("last_name", "invalid"))
@@ -118,32 +116,14 @@ class TestLastNameInvalid:
             valid_payload["last_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
-            # 422 responses do not contain a 'valid' key — only 201 responses do.
-            # Status code + error message assertions are the correct contract checks.
-            assert_that(r.status_code).described_as(
-                f"Expected 4xx for invalid last_name={case['value']!r} [{case['id']}]"
-            ).is_in(400, 422)
-        if case.get("expected_error"):
-            with allure.step(f"Assert error message: {case['expected_error']!r}"):
-                error_messages = [
-                    m["message"]
-                    for errors in r.json().get("details", {}).values()
-                    for m in errors
-                ]
-                assert_that(error_messages).described_as(
-                    f"Response must contain LP-353 error text [{case['id']}]"
-                ).contains(case["expected_error"])
+            _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
+# Middle Name
 
-# ── Middle Name ──────────────────────────────────────────────────────────────
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
 @allure.story("Middle name")
-class TestMiddleNameValid:
-    """LP-353 Steps 5, 16 — middle name accepts Polish characters, mixed register, hyphen, 30-char boundary, and null (field is optional)."""
+@pytest.mark.qase(353)
+class TestMiddleName(_PersonalInfoBase):
+    """LP-353 Steps 5, 6, 16 — Polish chars, hyphen, 30-char boundary, and null (optional) accepted; Cyrillic rejected with exact error."""
 
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("middle_name", "valid"))
@@ -153,21 +133,7 @@ class TestMiddleNameValid:
             valid_payload["middle_name"] = case["value"]
         with allure.step("Submit personal info — assert 201 and valid=true"):
             r = api.submit_personal_info(**valid_payload)
-            assert_that(r.status_code).described_as(
-                f"Expected 201 for middle_name={case['value']!r} [{case['id']}]"
-            ).is_equal_to(201)
-            assert_that(r.json()["valid"]).described_as(
-                f"Response valid flag should be true [{case['id']}]"
-            ).is_true()
-
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
-@allure.story("Middle name")
-class TestMiddleNameInvalid:
-    """LP-353 Step 6 — Cyrillic middle name is rejected with exact LP-353 error message."""
+            _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("middle_name", "invalid"))
@@ -177,32 +143,15 @@ class TestMiddleNameInvalid:
             valid_payload["middle_name"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
-            # 422 responses do not contain a 'valid' key — only 201 responses do.
-            # Status code + error message assertions are the correct contract checks.
-            assert_that(r.status_code).described_as(
-                f"Expected 4xx for invalid middle_name={case['value']!r} [{case['id']}]"
-            ).is_in(400, 422)
-        if case.get("expected_error"):
-            with allure.step(f"Assert error message: {case['expected_error']!r}"):
-                error_messages = [
-                    m["message"]
-                    for errors in r.json().get("details", {}).values()
-                    for m in errors
-                ]
-                assert_that(error_messages).described_as(
-                    f"Response must contain LP-353 error text [{case['id']}]"
-                ).contains(case["expected_error"])
+            _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
 
-# ── Passport ID ──────────────────────────────────────────────────────────────
+# Passport ID
 
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
 @allure.story("Passport ID")
-class TestPassportIdValid:
-    """LP-353 Steps 7, 9 — passport ID accepts capital Latin letters + digits at max (20) and min (7) boundaries."""
+@pytest.mark.qase(353)
+class TestPassportId(_PersonalInfoBase):
+    """LP-353 Steps 7, 8, 9, 18 — capital letters + digits at max (20) and min (7) boundaries accepted; lowercase (with exact error) and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.parametrize("case", _params("passport_id", "valid"))
@@ -212,21 +161,7 @@ class TestPassportIdValid:
             valid_payload["passport_id"] = case["value"]
         with allure.step("Submit personal info — assert 201 and valid=true"):
             r = api.submit_personal_info(**valid_payload)
-            assert_that(r.status_code).described_as(
-                f"Expected 201 for passport_id={case['value']!r} [{case['id']}]"
-            ).is_equal_to(201)
-            assert_that(r.json()["valid"]).described_as(
-                f"Response valid flag should be true [{case['id']}]"
-            ).is_true()
-
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
-@allure.story("Passport ID")
-class TestPassportIdInvalid:
-    """LP-353 Steps 8, 18 — lowercase and blank passport ID are rejected."""
+            _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("passport_id", "invalid"))
@@ -236,32 +171,15 @@ class TestPassportIdInvalid:
             valid_payload["passport_id"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
-            # 422 responses do not contain a 'valid' key — only 201 responses do.
-            # Status code + error message assertions are the correct contract checks.
-            assert_that(r.status_code).described_as(
-                f"Expected 4xx for invalid passport_id={case['value']!r} [{case['id']}]"
-            ).is_in(400, 422)
-        if case.get("expected_error"):
-            with allure.step(f"Assert error message: {case['expected_error']!r}"):
-                error_messages = [
-                    m["message"]
-                    for errors in r.json().get("details", {}).values()
-                    for m in errors
-                ]
-                assert_that(error_messages).described_as(
-                    f"Response must contain LP-353 error text [{case['id']}]"
-                ).contains(case["expected_error"])
+            _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
 
-# ── Birth Date ────────────────────────────────────────────────────────────────
+# Birth Date
 
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
 @allure.story("Birth date")
-class TestBirthDateValid:
-    """LP-353 Steps 10, 14 — valid date and leap year Feb 29 are accepted.
+@pytest.mark.qase(353)
+class TestBirthDate(_PersonalInfoBase):
+    """LP-353 Steps 10, 12, 13, 14 — valid date and leap year Feb 29 accepted; wrong format, month 13, and non-leap Feb 29 rejected.
     Note: API expects DD\\MM\\YYYY (backslash). Step 11 (empty field) is UI-only, skipped pending MQA clarification."""
 
     @allure.severity(allure.severity_level.NORMAL)
@@ -272,21 +190,7 @@ class TestBirthDateValid:
             valid_payload["birth_date"] = case["value"]
         with allure.step("Submit personal info — assert 201 and valid=true"):
             r = api.submit_personal_info(**valid_payload)
-            assert_that(r.status_code).described_as(
-                f"Expected 201 for birth_date={case['value']!r} [{case['id']}]"
-            ).is_equal_to(201)
-            assert_that(r.json()["valid"]).described_as(
-                f"Response valid flag should be true [{case['id']}]"
-            ).is_true()
-
-
-@pytest.mark.api
-@pytest.mark.regression
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
-@allure.story("Birth date")
-class TestBirthDateInvalid:
-    """LP-353 Steps 12, 13, 14 — wrong format, month 13, and non-leap Feb 29 are rejected."""
+            _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize("case", _params("birth_date", "invalid"))
@@ -296,31 +200,15 @@ class TestBirthDateInvalid:
             valid_payload["birth_date"] = case["value"]
         with allure.step("Submit personal info — assert 4xx rejection"):
             r = api.submit_personal_info(**valid_payload)
-            # 422 responses do not contain a 'valid' key — only 201 responses do.
-            # Status code + error message assertions are the correct contract checks.
-            assert_that(r.status_code).described_as(
-                f"Expected 4xx for invalid birth_date={case['value']!r} [{case['id']}]"
-            ).is_in(400, 422)
-        if case.get("expected_error"):
-            with allure.step(f"Assert error message: {case['expected_error']!r}"):
-                error_messages = [
-                    m["message"]
-                    for errors in r.json().get("details", {}).values()
-                    for m in errors
-                ]
-                assert_that(error_messages).described_as(
-                    f"Response must contain LP-353 error text [{case['id']}]"
-                ).contains(case["expected_error"])
+            _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
 
-# ── Happy Path ────────────────────────────────────────────────────────────────
+# Happy Path
 
-@pytest.mark.api
-@pytest.mark.smoke
-@allure.suite("API Tests - Registration")
-@allure.feature("US-1.1.1 Personal Info")
 @allure.story("Happy path")
-class TestHappyPath:
+@pytest.mark.smoke
+@pytest.mark.qase(353)
+class TestHappyPath(_PersonalInfoBase):
     """LP-353 Step 19 — all valid fields combined, system accepts and saves data."""
 
     @allure.title("Happy path — all valid fields submitted successfully")
