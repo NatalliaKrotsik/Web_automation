@@ -66,7 +66,7 @@ def _assert_invalid(r, value, case_id, expected_error=None):
 # First Name
 
 @allure.story("First name")
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestFirstName(_PersonalInfoBase):
     """LP-353 Steps 1, 2, 15 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic and blank rejected."""
 
@@ -94,7 +94,7 @@ class TestFirstName(_PersonalInfoBase):
 # Last Name
 
 @allure.story("Last name")
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestLastName(_PersonalInfoBase):
     """LP-353 Steps 3, 4, 17 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic (with exact error) and blank rejected."""
 
@@ -121,7 +121,7 @@ class TestLastName(_PersonalInfoBase):
 # Middle Name
 
 @allure.story("Middle name")
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestMiddleName(_PersonalInfoBase):
     """LP-353 Steps 5, 6, 16 — Polish chars, hyphen, 30-char boundary, and null (optional) accepted; Cyrillic rejected with exact error."""
 
@@ -149,7 +149,7 @@ class TestMiddleName(_PersonalInfoBase):
 # Passport ID
 
 @allure.story("Passport ID")
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestPassportId(_PersonalInfoBase):
     """LP-353 Steps 7, 8, 9, 18 — capital letters + digits at max (20) and min (7) boundaries accepted; lowercase (with exact error) and blank rejected."""
 
@@ -177,7 +177,7 @@ class TestPassportId(_PersonalInfoBase):
 # Birth Date
 
 @allure.story("Birth date")
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestBirthDate(_PersonalInfoBase):
     """LP-353 Steps 10, 12, 13, 14 — valid date and leap year Feb 29 accepted; wrong format, month 13, and non-leap Feb 29 rejected.
     Note: API expects DD\\MM\\YYYY (backslash). Step 11 (empty field) is UI-only, skipped pending MQA clarification."""
@@ -207,7 +207,7 @@ class TestBirthDate(_PersonalInfoBase):
 
 @allure.story("Happy path")
 @pytest.mark.smoke
-@pytest.mark.qase(353)
+@pytest.mark.qase("LP-353")
 class TestHappyPath(_PersonalInfoBase):
     """LP-353 Step 19 — all valid fields combined, system accepts and saves data."""
 
