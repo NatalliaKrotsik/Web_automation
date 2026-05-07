@@ -4,7 +4,7 @@ import pytest
 
 from framework.logger.logger import Logger
 from framework.env_manager import EnvManager
-
+from framework.utils.utils import get_root_dir
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -18,7 +18,7 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session", autouse=True)
 def load_environment(request):
     """
-    Loads environment variables from the correct .env.<env> file
+    Loads environment variables from the correct .env.dev.<env> file
     before any tests are executed.
     """
     env = request.config.getoption("--env")
@@ -26,25 +26,10 @@ def load_environment(request):
 
 
 def pytest_configure(config):
-    """
-    Cleans allure-results directory before test execution.
-    """
-    test_target = None
-    for arg in config.args:
-        candidate = arg.split("::", 1)[0]
-        if os.path.isfile(candidate):
-            test_target = os.path.abspath(candidate)
-            break
 
-    clean_dir = (
-        os.path.dirname(test_target)
-        if test_target
-        else str(config.invocation_dir)
-    )
+    allure_dir = get_root_dir() / "allure-results"
 
-    allure_dir = os.path.join(clean_dir, "allure-results")
-
-    if os.path.isdir(allure_dir):
+    if allure_dir.is_dir():
         try:
             shutil.rmtree(allure_dir)
             print(f"[allure-cleanup] removed '{allure_dir}'")
