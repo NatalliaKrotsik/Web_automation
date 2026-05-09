@@ -1,10 +1,3 @@
-import pytest
-from framework.ui.core.browser_manager import BrowserManager
-
-
-@pytest.fixture(scope="session")
-def page():
-    bm = BrowserManager(browser_type="chromium")
-    page = bm.start()
-    yield page
-    bm.stop()
+# tests/ui/conftest.py
+# Browser fixtures are now handled by root conftest.py
+# page, context, browser fixtures cascade down from tests/conftest.py

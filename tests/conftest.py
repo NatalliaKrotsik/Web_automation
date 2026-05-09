@@ -4,6 +4,8 @@ import pytest
 
 from framework.logger.logger import Logger
 from framework.env_manager import EnvManager
+from playwright.sync_api import sync_playwright
+
 
 
 def pytest_addoption(parser):
@@ -86,3 +88,22 @@ def pytest_generate_tests(metafunc):
                 for item in data_list
             ]
             metafunc.parametrize(arg, data_list, ids=ids)
+
+@pytest.fixture(scope="session")
+def browser(load_environment):      # depends on load_environment so env loads first
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        yield browser
+        browser.close()
+
+@pytest.fixture(scope="function")
+def context(browser):
+    ctx = browser.new_context()
+    yield ctx
+    ctx.close()
+
+@pytest.fixture(scope="function")
+def page(context):
+    page = context.new_page()
+    yield page
+    page.close()
