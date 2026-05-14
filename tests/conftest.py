@@ -1,10 +1,11 @@
-import os
 import shutil
 import pytest
 
 from framework.logger.logger import Logger
 from framework.env_manager import EnvManager
 from framework.utils.utils import get_root_dir
+from playwright.sync_api import sync_playwright
+
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -18,7 +19,7 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="session", autouse=True)
 def load_environment(request):
     """
-    Loads environment variables from the correct .env.dev.<env> file
+    Loads environment variables from the correct .env.<env> file
     before any tests are executed.
     """
     env = request.config.getoption("--env")
@@ -26,17 +27,13 @@ def load_environment(request):
 
 
 def pytest_configure(config):
-
     allure_dir = get_root_dir() / "allure-results"
-
     if allure_dir.is_dir():
         try:
             shutil.rmtree(allure_dir)
             print(f"[allure-cleanup] removed '{allure_dir}'")
         except Exception as e:
             print(f"[allure-cleanup] FAILED: {e}")
-    else:
-        print("[allure-cleanup] no allure-results directory found")
 
 
 def pytest_runtest_logreport(report):
@@ -72,18 +69,21 @@ def pytest_generate_tests(metafunc):
             ]
             metafunc.parametrize(arg, data_list, ids=ids)
 
+
 @pytest.fixture(scope="session")
-def browser(load_environment):      # depends on load_environment so env loads first
+def browser(load_environment):
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         yield browser
         browser.close()
+
 
 @pytest.fixture(scope="function")
 def context(browser):
     ctx = browser.new_context()
     yield ctx
     ctx.close()
+
 
 @pytest.fixture(scope="function")
 def page(context):
