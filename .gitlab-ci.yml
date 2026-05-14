@@ -33,11 +33,9 @@ stages:
     - poetry run playwright install chromium
     - poetry run playwright install-deps chromium
   artifacts:
-      paths:
-        - public
-      expire_in: never
-    rules:
-      - when: always
+    expire_in: 1 day
+  rules:
+    - when: always
 
 ############################
 # UI TESTS
@@ -150,5 +148,6 @@ pages:
   artifacts:
     paths:
       - public
+    expire_in: never
   rules:
     - when: always
