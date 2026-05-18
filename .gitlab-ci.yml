@@ -148,6 +148,6 @@ pages:
   artifacts:
     paths:
       - public
-    expire_in: never
+    expire_in: 30 days
   rules:
     - when: always
