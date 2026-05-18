@@ -17,7 +17,6 @@ _DATA = _load_data()
 def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
 
-
 # Pytest marks
 
 pytestmark = [pytest.mark.api]
@@ -31,7 +30,6 @@ pytestmark = [pytest.mark.api]
 class _PersonalInfoBase:
     """Shared Allure three-level hierarchy for all name test classes."""
 
-
 # Helpers
 
 def _assert_valid(r, value, case_id):
@@ -41,7 +39,6 @@ def _assert_valid(r, value, case_id):
     assert_that(r.json()["valid"]).described_as(
         f"Response valid flag should be true [{case_id}]"
     ).is_true()
-
 
 def _assert_invalid(r, value, case_id, expected_error=None):
     assert_that(r.status_code).described_as(

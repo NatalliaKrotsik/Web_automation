@@ -1,5 +1,3 @@
-# tests/api/epic_1_welcome_page/test_personal_data.py
-
 import allure
 import pytest
 import yaml
@@ -23,8 +21,6 @@ def _params(field: str, category: str) -> list:
 # Pytest marks (pytest-native only — Allure labels go on the base class) 
 
 pytestmark = [pytest.mark.api, pytest.mark.regression]
-
-
 # Shared base class
 
 @allure.parent_suite("API Tests")

@@ -2,6 +2,7 @@ import allure
 import pytest
 import yaml
 from assertpy import assert_that
+
 from framework.api.auth_api import AuthAPI
 
 
@@ -11,6 +12,7 @@ class TestAuth:
 
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.title("Login with valid credentials should succeed")
+    @pytest.mark.smoke
     def test_login_with_valid_credentials(self, auth_tokens):
         assert_that(auth_tokens).contains_key("authenticationResult")
         auth_result = auth_tokens.get("authenticationResult", {})
@@ -18,8 +20,10 @@ class TestAuth:
         assert_that(auth_result).contains_key("refreshToken")
         assert_that(auth_result.get("accessToken")).is_not_none()
         assert_that(auth_result.get("refreshToken")).is_not_none()
+
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.title("Logout should succeed")
+    @pytest.mark.smoke
     def test_logout(self, auth_tokens):
         access_token = auth_tokens.get("authenticationResult", {}).get("accessToken")
         auth_api = AuthAPI()
@@ -29,6 +33,7 @@ class TestAuth:
 
     @allure.severity(allure.severity_level.CRITICAL)
     @allure.title("Login with invalid credentials should fail")
+    @pytest.mark.regression
     def test_login_with_invalid_credentials(self):
         with open("tests/api/data/test_auth_data.yaml") as f:
             data = yaml.safe_load(f)
@@ -36,7 +41,4 @@ class TestAuth:
 
         auth_api = AuthAPI()
         with pytest.raises(ValueError, match="Authorization failed"):
-            auth_api.authorization(
-                email=credentials["email"],
-                password=credentials["password"]
-            )
+            auth_api.authorization(email=credentials["email"], password=credentials["password"])
