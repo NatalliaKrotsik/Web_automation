@@ -1,3 +1,4 @@
+import copy
 import pytest
 import yaml
 
@@ -12,4 +13,4 @@ _DATA = _load_data()
 
 @pytest.fixture(scope="function")
 def personal_info_data() -> dict:
-    return _DATA
+    return copy.deepcopy(_DATA)

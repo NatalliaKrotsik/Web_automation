@@ -3,7 +3,6 @@ import yaml
 
 from framework.api.personal_data_api import PersonalDataAPI
 
-
 def _load_baseline() -> dict:
     with open("tests/api/epic_1_welcome_page/data/test_personal_data.yaml", encoding="utf-8") as f:
         return yaml.safe_load(f)["valid_baseline"]
@@ -11,11 +10,9 @@ def _load_baseline() -> dict:
 
 _BASELINE = _load_baseline()
 
-
 @pytest.fixture(scope="function")
 def api() -> PersonalDataAPI:
     return PersonalDataAPI()
-
 
 @pytest.fixture(scope="function")
 def valid_payload() -> dict:
