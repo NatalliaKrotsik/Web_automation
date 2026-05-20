@@ -1,0 +1,25 @@
+valid:
+  first_name:  "Ivan"
+  last_name:   "Petrov"
+  passport_id: "BR2541789"
+  birth_date:  "01/01/1980"
+
+invalid:
+  first_name:
+    value: "!!!"
+    expected_error: "First name can include only Latin letters, Polish characters, spaces, hyphens, and apostrophes"
+  middle_name:
+    value: "!!!"
+    expected_error: "Middle name can include only Latin letters, Polish characters, spaces, hyphens, and apostrophes"
+  last_name:
+    value: "!!!"
+    expected_error: "Last name can include only Latin letters, Polish characters, spaces, hyphens, and apostrophes"
+  passport_id:
+    value: "!!!"
+    expected_error: "Must be between 7 and 20 characters"
+  birth_date:
+    value: "99/99/9999"
+    expected_error: "Invalid birth date"
+
+duplicate_passport:
+  passport_id: "5429469DIFH7799"
