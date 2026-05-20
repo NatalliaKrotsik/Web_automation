@@ -2,6 +2,7 @@ import allure
 import pytest
 import yaml
 from assertpy import assert_that
+
 from framework.api.auth_api import AuthAPI
 
 
@@ -37,7 +38,15 @@ class TestAuth:
 
         auth_api = AuthAPI()
         with pytest.raises(ValueError, match="Authorization failed"):
-            auth_api.authorization(
-                email=credentials["email"],
-                password=credentials["password"]
-            )
+            auth_api.authorization(email=credentials["email"], password=credentials["password"])
+
+    # Verify that active session returns 200
+    def test_session_ping(self, auth_tokens):
+        access_token = auth_tokens.get("authenticationResult", {}).get("accessToken")
+
+        auth_api = AuthAPI()
+        auth_api.update_headers({"Authorization": f"Bearer {access_token}"})
+
+        response = auth_api.session_ping(access_token)
+
+        assert_that(response.status_code).is_equal_to(200)

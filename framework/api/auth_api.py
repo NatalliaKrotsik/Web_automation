@@ -1,5 +1,6 @@
 import allure
 import requests
+
 from framework.api.core.http_client import HttpClient
 
 
@@ -15,9 +16,7 @@ class AuthAPI(HttpClient):
         data = {"email": email, "password": password}
         auth = self.post(path=self.endpoint + "sign-in", json_body=data)
         if auth.status_code != 200:
-            raise ValueError(
-                f"Authorization failed with status code {auth.status_code}"
-            )
+            raise ValueError(f"Authorization failed with status code {auth.status_code}")
         tokens = auth.json()
         authentication_result = tokens.get("authenticationResult", {})
         auth_headers = {"Authorization": f'Bearer {authentication_result.get("accessToken")}'}
@@ -29,3 +28,7 @@ class AuthAPI(HttpClient):
     @allure.step("User logout step.")
     def sign_out_user(self, access_token: str) -> requests.Response:
         return self.post(path=self.endpoint + "sign-out", json_body={"accessToken": access_token})
+
+    @allure.step("Session ping step")
+    def session_ping(self, access_token: str) -> requests.Response:
+        return self.post(path=self.endpoint + "session/ping", json_body={"accessToken": access_token})
