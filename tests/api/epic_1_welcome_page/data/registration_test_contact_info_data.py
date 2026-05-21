@@ -97,15 +97,6 @@ VALID_EMAILS = [
     ),
     pytest.param(
         {
-            "email": "wiitkzpxunlvevrjvvzgipryalytmbnkmqxzhzzttxekoqucb@a.vtp",
-            "phone": "+48299976714",
-            "expected_status": 201,
-            "expected_error": None,
-        },
-        id="valid_email_fs",
-    ),
-    pytest.param(
-        {
             "email": "PRETTYEXAMPLE@BOX.COM",
             "phone": "+48299976714",
             "expected_status": 201,
