@@ -88,7 +88,7 @@ VALID_EMAILS = [
     ),
     pytest.param(
         {
-            "email": "wiitkzpxunlvevrjvvzgipryalytmbnkmqxzhzztxekoqucb@a.vtp",
+            "email": "wiitzpxunlvevrjvvzgipryalytmbnkmqxzhzztxekoqucb@a.vtp",
             "phone": "+48299976714",
             "expected_status": 201,
             "expected_error": None,
