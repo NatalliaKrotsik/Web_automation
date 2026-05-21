@@ -47,4 +47,4 @@ class TestRegistrationContactInfoAPI:
 
         response = requests.post(self.URL, json=data)
 
-        assert response.status_code == 400
+        assert response.status_code == data["expected_status"]
