@@ -130,7 +130,7 @@ INVALID_EMAILS = [
         {
             "email": "alina!@gmail.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Email wrong format",
         },
         id="invalid_email_exclamation_mark",
@@ -139,7 +139,7 @@ INVALID_EMAILS = [
         {
             "email": "ali?na@gmail.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Email wrong format",
         },
         id="invalid_email_question_mark",
@@ -148,7 +148,7 @@ INVALID_EMAILS = [
         {
             "email": r"alina\petrova@gmail.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Email wrong format",
         },
         id="invalid_email_slash",
@@ -157,7 +157,7 @@ INVALID_EMAILS = [
         {
             "email": "email2mailbox.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Email wrong format. try adding a '@' symbol",
         },
         id="invalid_email_without_at_sign",
@@ -166,7 +166,7 @@ INVALID_EMAILS = [
         {
             "email": "email@mailboxcom",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Email wrong format. try adding a '.' symbol",
         },
         id="invalid_email_without_dot",
@@ -175,7 +175,7 @@ INVALID_EMAILS = [
         {
             "email": "wiitkzpxfunlvevrjvvzgipryalytmybnkmqxzhzzttxekoqucb@a.vtp",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Must be between 6 and 55 characters",
         },
         id="invalid_email_more_than_upper_limit",
@@ -184,7 +184,7 @@ INVALID_EMAILS = [
         {
             "email": " prettyExample@box.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Invalid characters in email",
         },
         id="invalid_email_two_spaces_before",
@@ -193,7 +193,7 @@ INVALID_EMAILS = [
         {
             "email": "prettyE xample@box.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Invalid characters in email",
         },
         id="invalid_email_spaces_between",
@@ -202,7 +202,7 @@ INVALID_EMAILS = [
         {
             "email": "prettyExample@box.com ",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Invalid characters in email",
         },
         id="invalid_email_two_spaces_after",
@@ -211,7 +211,7 @@ INVALID_EMAILS = [
         {
             "email": "лучшая@почта.ком",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Invalid characters in email",
         },
         id="invalid_email_russian",
@@ -220,7 +220,7 @@ INVALID_EMAILS = [
         {
             "email": "pretty@MaiButihavefdfsdfsdfsdfsdfsdfsdfsdfsfsdfsdsgsgsdgsdgsdgsdgsdgsdgsdgdgsgsdgsgl.com",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Must be between 6 and 55 characters",
         },
         id="invalid_email_too_much_characters",
@@ -229,7 +229,7 @@ INVALID_EMAILS = [
         {
             "email": "",
             "phone": "+48299976714",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "The field cannot be empty",
         },
         id="invalid_email_empty_field",
@@ -381,7 +381,7 @@ INVALID_PHONES = [
         {
             "email": "huhuh@gmail.com",
             "phone": "+48123456!!",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number must contain only digits",
         },
         id="invalid_phone_exclamation_mark",
@@ -390,7 +390,7 @@ INVALID_PHONES = [
         {
             "email": "oioioi@hmail.com",
             "phone": "+48123456-aaa",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number must contain only digits",
         },
         id="invalid_phone_letter",
@@ -399,7 +399,7 @@ INVALID_PHONES = [
         {
             "email": "ianian@gmail@gmail.com",
             "phone": "+48345678-91",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number length should be at least 11 symbols",
         },
         id="invalid_phone_ten_characters",
@@ -408,7 +408,7 @@ INVALID_PHONES = [
         {
             "email": "youyou@gmail.com",
             "phone": "+483456789-1234",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number length should be at least 11 symbols",
         },
         id="invalid_phone_thirteen_characters",
@@ -417,7 +417,7 @@ INVALID_PHONES = [
         {
             "email": "gygygy@gmail.com",
             "phone": "48299976778",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number length should be at least 11 symbols",
         },
         id="invalid_phone_without_plus_sign",
@@ -426,7 +426,7 @@ INVALID_PHONES = [
         {
             "email": "lily@gmail.com",
             "phone": "4+8299976778",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number length should be at least 11 symbols",
         },
         id="invalid_phone_digits_before_plus_sign",
@@ -435,7 +435,7 @@ INVALID_PHONES = [
         {
             "email": "nunununu@gmail.com",
             "phone": "+7 299976778",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number length should be at least 11 symbols",
         },
         id="invalid_phone_russian_code",
@@ -444,7 +444,7 @@ INVALID_PHONES = [
         {
             "email": "bbbiot@gmail.com",
             "phone": "+48 54789654789654122",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_more_than_allowed_characters",
@@ -453,7 +453,7 @@ INVALID_PHONES = [
         {
             "email": "ootyr@gmail.com",
             "phone": "+485752",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": None,
         },
         id="invalid_phone_six_characters",
@@ -471,7 +471,7 @@ INVALID_PHONES = [
         {
             "email": "tytytyt@gmail.com",
             "phone": "+32 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_belgium",
@@ -480,7 +480,7 @@ INVALID_PHONES = [
         {
             "email": "momom@gmail.com",
             "phone": "+33 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_france",
@@ -489,7 +489,7 @@ INVALID_PHONES = [
         {
             "email": "vbvvbvbbb@gmail.com",
             "phone": "+49 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_germany",
@@ -498,7 +498,7 @@ INVALID_PHONES = [
         {
             "email": "xcxcx@gmail.com",
             "phone": "+39 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_italy",
@@ -507,7 +507,7 @@ INVALID_PHONES = [
         {
             "email": "ffgfgfg@gmail.com",
             "phone": "+48 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_poland",
@@ -516,7 +516,7 @@ INVALID_PHONES = [
         {
             "email": "rerer@gmail.com",
             "phone": "+34 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_spain",
@@ -525,7 +525,7 @@ INVALID_PHONES = [
         {
             "email": "njnjnjn@gmail.com",
             "phone": "+46 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_sweden",
@@ -534,7 +534,7 @@ INVALID_PHONES = [
         {
             "email": "kjkjkj@gmail.com",
             "phone": "+44 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_uk",
@@ -543,7 +543,7 @@ INVALID_PHONES = [
         {
             "email": "bvbnn@gmail.com",
             "phone": "+420 999999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_czech_republic",
@@ -552,7 +552,7 @@ INVALID_PHONES = [
         {
             "email": "mkmkmkm@gmail.com",
             "phone": "+359 29 9999999",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_operator_bulgaria",
@@ -561,7 +561,7 @@ INVALID_PHONES = [
         {
             "email": "popopo@gmail.com",
             "phone": "+32 50 5487565",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_landline_belgium",
@@ -570,7 +570,7 @@ INVALID_PHONES = [
         {
             "email": "asasas@gmail.com",
             "phone": "+39 06 5487565",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_landline_italy",
@@ -579,7 +579,7 @@ INVALID_PHONES = [
         {
             "email": "ioioiioi@gmail.com",
             "phone": "+34 91 5487565",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_landline_spain",
@@ -588,7 +588,7 @@ INVALID_PHONES = [
         {
             "email": "sweden@gmail.com",
             "phone": "+46 4 548756",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_landline_sweden",
@@ -597,7 +597,7 @@ INVALID_PHONES = [
         {
             "email": "bgla@gmail.com",
             "phone": "+359 32 5487565",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": "Phone number wrong format",
         },
         id="invalid_phone_without_landline_bulgaria",
@@ -606,7 +606,7 @@ INVALID_PHONES = [
         {
             "email": "bgla@gmail.com",
             "phone": "",
-            "expected_status": 400,
+            "expected_status": 422,
             "expected_error": None,
         },
         id="invalid_phone_empty_field",

@@ -31,7 +31,7 @@ class TestRegistrationContactInfoAPI:
 
         response = requests.post(self.URL, json=data)
 
-        assert response.status_code == 400
+        assert response.status_code == 422
 
     @allure.title("API accepts valid phone")
     @pytest.mark.parametrize("data", VALID_PHONES)
