@@ -11,14 +11,17 @@ from tests.api.epic_1_welcome_page.data.registration_test_contact_info_data impo
 
 
 class TestRegistrationContactInfoAPI:
+    BASE_URL = "https://api-dev.pretty-py.andersenlab.dev"
 
-    URL = "https://api-dev.pretty-py.andersenlab.dev/api/registration/contact-info"
+    ENDPOINT = "/api/registration/contact-info"
+
+    URL = f"{BASE_URL}{ENDPOINT}"
 
     @allure.title("API accepts valid email")
     @pytest.mark.parametrize("data", VALID_EMAILS)
     def test_api_accepts_valid_email(self, data):
 
-        response = requests.post(self.URL, json=data)
+        response = requests.post(self.URL, json=data, timeout=5)
 
         assert response.status_code == 201
 

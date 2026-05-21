@@ -178,7 +178,7 @@ INVALID_EMAILS = [
             "expected_status": 400,
             "expected_error": "Email wrong format. try adding a '.' symbol",
         },
-        id="invalid_email__without_dot",
+        id="invalid_email_without_dot",
     ),
     pytest.param(
         {
