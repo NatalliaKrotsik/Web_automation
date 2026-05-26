@@ -1,0 +1,41 @@
+# US-1.15 — Exchange Rates
+# Endpoint: GET /api/processing-center/exchange-rates
+
+expected_status_code: 200
+
+expected_base_currency: "PLN"
+
+expected_fields:
+  - rates
+  - effectiveDate
+  - baseCurrency
+
+expected_rate_fields:
+  - code
+  - currency
+  - buyRate
+  - sellRate
+  - icon
+
+expected_currencies:
+  - code: GBP
+    currency: "British Pound"
+  - code: CNY
+    currency: "Chinese Yuan"
+  - code: EUR
+    currency: "Euro"
+  - code: JPY
+    currency: "Japanese Yen"
+  - code: CHF
+    currency: "Swiss Franc"
+  - code: USD
+    currency: "US Dollar"
+
+margin:
+  buy_multiplier: "1.02"
+  sell_multiplier: "0.98"
+  decimal_places: 2
+
+date_format: "%Y-%m-%d"
+
+nbp_base_url: "https://api.nbp.pl/api/exchangerates/rates/C"
