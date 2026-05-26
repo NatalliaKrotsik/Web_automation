@@ -6,9 +6,9 @@ import pytest
 @allure.parent_suite("UI Tests")
 @allure.suite("Registration")
 @allure.sub_suite("US-1.1.1 Personal Info")
-class TestPageOpen:
+class TestDuplicatePassport:
 
-    @allure.title("TC-02 — Sign Up opens Personal Info form")
+    @allure.title("TC-62 — Duplicate passport ID shows error in UI")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_sign_up_opens_personal_info_form(self, page):
+    def test_duplicate_passport_shows_error(self, page):
         pass
