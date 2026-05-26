@@ -7,7 +7,7 @@ load_dotenv()
 
 
 class ExamplePage(BasePage):
-
+    FIRST_NAME = '//*[@id="firstName"]'
     SIGN_UP_BTN = '//a[@href="/signup"]'
     LOGIN_BTN = '//a[@href="/login"]'
     LOGO = "//*[@id='root']/div/header/div/div[1]/a"
