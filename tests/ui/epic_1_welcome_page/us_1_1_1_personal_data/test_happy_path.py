@@ -13,4 +13,3 @@ class TestHappyPath:
     @allure.severity(allure.severity_level.BLOCKER)
     def test_full_valid_submission(self, page):
         pass
-
