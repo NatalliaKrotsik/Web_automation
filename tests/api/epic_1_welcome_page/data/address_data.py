@@ -1,4 +1,4 @@
-valid_adress = {
+valid_address = {
     "registrationAddress": {
         "street": "Prosta",
         "houseNumber": "1",
