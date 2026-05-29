@@ -18,10 +18,8 @@ def _params(field: str, category: str) -> list:
     return [pytest.param(c, id=c["id"]) for c in _DATA[field][category]]
 
 
-# Pytest marks (pytest-native only — Allure labels go on the base class) 
 
-pytestmark = [pytest.mark.api, pytest.mark.regression]
-# Shared base class
+pytestmark = [pytest.mark.api]
 
 @allure.parent_suite("API Tests")
 @allure.suite("Registration")
@@ -67,6 +65,7 @@ class TestFirstName(_PersonalInfoBase):
     """LP-353 Steps 1, 2, 15 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("first_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
         allure.dynamic.title(f"First name — valid input accepted: {case['id']}")
@@ -77,6 +76,7 @@ class TestFirstName(_PersonalInfoBase):
             _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("first_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
         allure.dynamic.title(f"First name — invalid input rejected: {case['id']}")
@@ -95,6 +95,7 @@ class TestLastName(_PersonalInfoBase):
     """LP-353 Steps 3, 4, 17 — Polish chars, mixed register, hyphen, 30-char boundary accepted; Cyrillic (with exact error) and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("last_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
         allure.dynamic.title(f"Last name — valid input accepted: {case['id']}")
@@ -105,6 +106,7 @@ class TestLastName(_PersonalInfoBase):
             _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("last_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
         allure.dynamic.title(f"Last name — invalid input rejected: {case['id']}")
@@ -122,6 +124,7 @@ class TestMiddleName(_PersonalInfoBase):
     """LP-353 Steps 5, 6, 16 — Polish chars, hyphen, 30-char boundary, and null (optional) accepted; Cyrillic rejected with exact error."""
 
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("middle_name", "valid"))
     def test_valid_input(self, api, valid_payload, case):
         allure.dynamic.title(f"Middle name — valid input accepted: {case['id']}")
@@ -132,6 +135,7 @@ class TestMiddleName(_PersonalInfoBase):
             _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("middle_name", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
         allure.dynamic.title(f"Middle name — invalid input rejected: {case['id']}")
@@ -150,6 +154,7 @@ class TestPassportId(_PersonalInfoBase):
     """LP-353 Steps 7, 8, 9, 18 — capital letters + digits at max (20) and min (7) boundaries accepted; lowercase (with exact error) and blank rejected."""
 
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("passport_id", "valid"))
     def test_valid_input(self, api, valid_payload, case):
         allure.dynamic.title(f"Passport ID — valid input accepted: {case['id']}")
@@ -160,6 +165,7 @@ class TestPassportId(_PersonalInfoBase):
             _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("passport_id", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
         allure.dynamic.title(f"Passport ID — invalid input rejected: {case['id']}")
@@ -179,6 +185,7 @@ class TestBirthDate(_PersonalInfoBase):
     Note: API expects DD\\MM\\YYYY (backslash). Step 11 (empty field) is UI-only, skipped pending MQA clarification."""
 
     @allure.severity(allure.severity_level.NORMAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("birth_date", "valid"))
     def test_valid_input(self, api, valid_payload, case):
         allure.dynamic.title(f"Birth date — valid input accepted: {case['id']}")
@@ -189,6 +196,7 @@ class TestBirthDate(_PersonalInfoBase):
             _assert_valid(r, case["value"], case["id"])
 
     @allure.severity(allure.severity_level.CRITICAL)
+    @pytest.mark.regression
     @pytest.mark.parametrize("case", _params("birth_date", "invalid"))
     def test_invalid_input_rejected(self, api, valid_payload, case):
         allure.dynamic.title(f"Birth date — invalid input rejected: {case['id']}")
@@ -202,13 +210,13 @@ class TestBirthDate(_PersonalInfoBase):
 # Happy Path
 
 @allure.story("Happy path")
-@pytest.mark.smoke
 @pytest.mark.qase("LP-353")
 class TestHappyPath(_PersonalInfoBase):
     """LP-353 Step 19 — all valid fields combined, system accepts and saves data."""
 
     @allure.title("Happy path — all valid fields submitted successfully")
     @allure.severity(allure.severity_level.BLOCKER)
+    @pytest.mark.smoke
     def test_all_valid_fields(self, api):
         hp = _DATA["happy_path"]
         with allure.step("Build LP-353 Step 19 payload"):

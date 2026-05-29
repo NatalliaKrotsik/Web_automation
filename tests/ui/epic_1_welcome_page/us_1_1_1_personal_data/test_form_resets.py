@@ -14,6 +14,7 @@ pytestmark = [pytest.mark.ui]
 class TestFormResets:
 
     @allure.title("TC-78 — Fields are empty after page reload")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_fields_empty_after_reload(self, page: Page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -38,6 +39,7 @@ class TestFormResets:
             personal_info.expect_field_value("birthDate", "")
 
     @allure.title("TC-79 — Fields are empty after closing and reopening tab")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_fields_empty_after_tab_close(self, context, personal_info_data) -> None:
         valid = personal_info_data["valid"]

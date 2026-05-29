@@ -8,7 +8,7 @@ import requests
 import yaml
 from assertpy import assert_that
 
-pytestmark = [pytest.mark.api, pytest.mark.regression]
+pytestmark = [pytest.mark.api]
 
 
 # Data loader
@@ -52,8 +52,9 @@ def _decimal_places(value: float) -> int:
 
 # Shared base class
 
-@allure.suite("API Tests - Welcome Page")
-@allure.feature("US-1.15 Exchange Rates")
+@allure.parent_suite("API Tests")
+@allure.suite("Registration")
+@allure.sub_suite("US-1.15 Exchange Rates")
 class _ExchangeRatesBase:
     pass
 

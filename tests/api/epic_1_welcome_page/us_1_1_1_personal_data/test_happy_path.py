@@ -11,7 +11,7 @@ def _load_data() -> dict:
 
 _DATA = _load_data()
 
-pytestmark = [pytest.mark.api, pytest.mark.smoke]
+pytestmark = [pytest.mark.api]
 
 
 @allure.parent_suite("API Tests")
@@ -27,6 +27,7 @@ class TestHappyPath(_PersonalInfoBase):
     """LP-75 — all valid fields submitted together, system accepts and returns valid=true."""
     @allure.title("Happy path — all valid fields submitted successfully")
     @allure.severity(allure.severity_level.BLOCKER)
+    @pytest.mark.smoke
     def test_all_valid_fields(self, api):
         hp = _DATA["happy_path"]
         with allure.step("Build happy path payload"):
