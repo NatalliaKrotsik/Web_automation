@@ -5,9 +5,12 @@ from playwright.sync_api import expect
 from framework.ui.pages.home_page import HomePage
 from tests.ui.data.home_page_data import NAV_ITEMS
 
+pytestmark = [pytest.mark.ui]
 
-@pytest.mark.ui
+
+@allure.parent_suite("UI Tests")
 @allure.suite("Home Page")
+@allure.sub_suite("Navigation")
 class TestHomePage:
 
     @allure.title("Page title is 'PRetty'")
