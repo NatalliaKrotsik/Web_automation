@@ -3,6 +3,7 @@ import yaml
 
 from framework.api.personal_data_api import PersonalDataAPI
 from framework.api.exchange_rates_api import ExchangeRatesAPI
+from framework.api.card_products_api import CardProductsAPI
 
 def _load_baseline() -> dict:
     with open("tests/api/epic_1_welcome_page/data/test_personal_data.yaml", encoding="utf-8") as f:
@@ -19,6 +20,9 @@ def api() -> PersonalDataAPI:
 def exchange_rates_api() -> ExchangeRatesAPI:
     return ExchangeRatesAPI()
 
+@pytest.fixture(scope="function")
+def card_products_api() -> CardProductsAPI:
+    return CardProductsAPI()
 
 @pytest.fixture(scope="function")
 def valid_payload() -> dict:
