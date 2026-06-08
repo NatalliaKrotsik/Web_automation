@@ -1,8 +1,9 @@
 import allure
 import pytest
 
+pytestmark = [pytest.mark.ui]
 
-@pytest.mark.ui
+
 @allure.parent_suite("UI Tests")
 @allure.suite("Registration")
 @allure.sub_suite("US-1.1.1 Personal Info")

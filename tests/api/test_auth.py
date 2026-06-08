@@ -5,9 +5,12 @@ from assertpy import assert_that
 
 from framework.api.auth_api import AuthAPI
 
+pytestmark = [pytest.mark.api]
 
-@pytest.mark.api
-@allure.suite("API Tests - Auth")
+
+@allure.parent_suite("API Tests")
+@allure.suite("Authentication")
+@allure.sub_suite("Auth")
 class TestAuth:
 
     @allure.severity(allure.severity_level.CRITICAL)
@@ -40,13 +43,11 @@ class TestAuth:
         with pytest.raises(ValueError, match="Authorization failed"):
             auth_api.authorization(email=credentials["email"], password=credentials["password"])
 
-    # Verify that active session returns 200
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Active session ping returns 200")
     def test_session_ping(self, auth_tokens):
         access_token = auth_tokens.get("authenticationResult", {}).get("accessToken")
-
         auth_api = AuthAPI()
         auth_api.update_headers({"Authorization": f"Bearer {access_token}"})
-
         response = auth_api.session_ping(access_token)
-
         assert_that(response.status_code).is_equal_to(200)

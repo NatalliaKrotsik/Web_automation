@@ -14,6 +14,7 @@ pytestmark = [pytest.mark.ui]
 class TestBackNavigation:
 
     @allure.title("TC-76 — Fields pre-filled when navigating back from Contact Details")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_fields_pre_filled_after_back_navigation(self, page: Page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -41,6 +42,7 @@ class TestBackNavigation:
             personal_info.expect_field_value("birthDate", valid["birth_date"])
 
     @allure.title("TC-77 — Re-validation triggers after navigating back and editing invalid value")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_revalidation_after_back_navigation(self, page: Page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
