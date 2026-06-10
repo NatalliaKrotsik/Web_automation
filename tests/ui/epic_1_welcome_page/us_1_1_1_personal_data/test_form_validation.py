@@ -12,6 +12,7 @@ pytestmark = [pytest.mark.ui]
 class TestFormValidation:
 
     @allure.title("TC-04 — Invalid first name shows error message")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_invalid_first_name_shows_error(self, page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -28,6 +29,7 @@ class TestFormValidation:
             personal_info.expect_field_error_visible("firstName", invalid["expected_error"])
 
     @allure.title("TC-04 — Invalid middle name shows error message")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_invalid_middle_name_shows_error(self, page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -44,6 +46,7 @@ class TestFormValidation:
             personal_info.expect_field_error_visible("middleName", invalid["expected_error"])
 
     @allure.title("TC-04 — Invalid last name shows error message")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_invalid_last_name_shows_error(self, page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -60,6 +63,7 @@ class TestFormValidation:
             personal_info.expect_field_error_visible("lastName", invalid["expected_error"])
 
     @allure.title("TC-04 — Invalid passport ID shows error message")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_invalid_passport_id_shows_error(self, page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)
@@ -76,6 +80,7 @@ class TestFormValidation:
             personal_info.expect_field_error_visible("passportId", invalid["expected_error"])
 
     @allure.title("TC-66 — Invalid birth date shows error message")
+    @allure.severity(allure.severity_level.NORMAL)
     @pytest.mark.regression
     def test_invalid_birth_date_shows_error(self, page, personal_info_data) -> None:
         personal_info = PersonalInfoPage(page)

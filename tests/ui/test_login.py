@@ -12,10 +12,12 @@ from tests.ui.data.login_data import (
     get_valid_user,
 )
 
+pytestmark = [pytest.mark.ui, pytest.mark.smoke]
 
-@pytest.mark.ui
-@pytest.mark.smoke
+
+@allure.parent_suite("UI Tests")
 @allure.suite("Authentication")
+@allure.sub_suite("Login")
 class TestLogin:
 
     @pytest.mark.qase("PRETTY-229")

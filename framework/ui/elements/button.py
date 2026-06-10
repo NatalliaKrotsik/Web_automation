@@ -7,7 +7,7 @@ class Button(BaseElement):
 
     def get_button_locator_and_click_around(self):
 
-        button_box = self.selector.bounding_box()
+        button_box = self.locator.bounding_box()
 
         offsets = [
             (-5, -5),
@@ -24,5 +24,5 @@ class Button(BaseElement):
             x_offset = button_box["x"] + offset[0]
             y_offset = button_box["y"] + offset[1]
 
-            self.base_page.mouse.move(x_offset, y_offset)
-            self.base_page.mouse.click(x_offset, y_offset)
+            self.page.mouse.move(x_offset, y_offset)
+            self.page.mouse.click(x_offset, y_offset)
