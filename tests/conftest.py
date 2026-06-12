@@ -99,8 +99,9 @@ def pytest_generate_tests(metafunc):
 
 @pytest.fixture(scope="session")
 def browser(load_environment):
+    cfg = EnvManager.get_config().ui
     with sync_playwright() as pw:
-        browser = pw.chromium.launch(headless=True)
+        browser = pw[cfg.browser].launch(headless=cfg.headless, slow_mo=cfg.slow_mo)
         yield browser
         browser.close()
 
