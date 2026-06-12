@@ -15,8 +15,8 @@ class BasePage:
     def wait_for_timeout(self, timeout_ms) -> None:
         self.page.wait_for_timeout(timeout_ms)
 
-    def wait_for_the_url(self, url: str, timeout: int = 15000) -> None:
-        self.page.wait_for_url(url, timeout=timeout)
+    def wait_for_the_url(self, url: str, timeout: int = 30000) -> None:
+        self.page.wait_for_url(url, timeout=timeout, wait_until="domcontentloaded")
 
     def context(self) -> Page:
         return self.page.context
