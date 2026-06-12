@@ -42,8 +42,8 @@ def _assert_valid(r, value, case_id):
 
 def _assert_invalid(r, value, case_id, expected_error=None):
     assert_that(r.status_code).described_as(
-        f"Expected 422 for value={value!r} [{case_id}]"
-    ).is_equal_to(422)
+        f"Expected 400 for value={value!r} [{case_id}]"
+    ).is_equal_to(400)
     if expected_error:
         error_messages = [
             e["message"]
@@ -84,7 +84,7 @@ class TestFirstName(_PersonalInfoBase):
         allure.dynamic.title(f"First name — invalid input rejected: {case['id']}")
         with allure.step(f"Override firstName with {case['value']!r}"):
             valid_payload["first_name"] = case["value"]
-        with allure.step("Submit personal info — assert 422 rejection"):
+        with allure.step("Submit personal info — assert 400 rejection"):
             r = api.submit_personal_info(**valid_payload)
             _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
@@ -118,7 +118,7 @@ class TestLastName(_PersonalInfoBase):
         allure.dynamic.title(f"Last name — invalid input rejected: {case['id']}")
         with allure.step(f"Override lastName with {case['value']!r}"):
             valid_payload["last_name"] = case["value"]
-        with allure.step("Submit personal info — assert 422 rejection"):
+        with allure.step("Submit personal info — assert 400 rejection"):
             r = api.submit_personal_info(**valid_payload)
             _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
@@ -153,7 +153,7 @@ class TestMiddleName(_PersonalInfoBase):
         allure.dynamic.title(f"Middle name — invalid input rejected: {case['id']}")
         with allure.step(f"Override middleName with {case['value']!r}"):
             valid_payload["middle_name"] = case["value"]
-        with allure.step("Submit personal info — assert 422 rejection"):
+        with allure.step("Submit personal info — assert 400 rejection"):
             r = api.submit_personal_info(**valid_payload)
             _assert_invalid(r, case["value"], case["id"], case.get("expected_error"))
 
