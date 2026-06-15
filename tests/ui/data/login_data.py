@@ -1,7 +1,13 @@
 import pytest
 
+from framework.env_manager import EnvManager
+
+
 def get_valid_user() -> dict:
-    return {"email": "jan.kowalski.test@mailinator.com", "password": "Test@1234!"}
+    return {
+        "email": EnvManager.get("USER_EMAIL_DEV"),
+        "password": EnvManager.get("USER_PASSWORD_DEV"),
+    }
 
 INVALID_PASSWORD = pytest.param(
     {"email": "jan.kowalski.test@mailinator.com", "password": "WrongPass!99"},
