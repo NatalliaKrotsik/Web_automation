@@ -49,13 +49,16 @@ class TestSignIn:
         expected_error,
         expected_status,
     ):
-        assert expected_status in [400, 401, 409, 422]
+        response = sign_in(email, password)
+
+        assert response.status_code == expected_status
+        assert expected_error in response.text
 
     @allure.title("User is blocked after 5 invalid sign-in attempts")
     def test_user_is_blocked_after_5_invalid_attempts(self):
         for _ in range(5):
             response = sign_in(
-                email="test@test.com",
+                email="xonib78658@inreur.com",
                 password="wrong_password",
             )
             assert response.status_code == 401
