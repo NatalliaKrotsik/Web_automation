@@ -2,6 +2,7 @@ import pytest
 import yaml
 
 from framework.api.address_api import AddressAPI
+from framework.api.card_products_api import CardProductsAPI
 from framework.api.exchange_rates_api import ExchangeRatesAPI
 from framework.api.personal_data_api import PersonalDataAPI
 
@@ -22,6 +23,11 @@ def api() -> PersonalDataAPI:
 @pytest.fixture(scope="function")
 def exchange_rates_api() -> ExchangeRatesAPI:
     return ExchangeRatesAPI()
+
+
+@pytest.fixture(scope="function")
+def card_products_api() -> CardProductsAPI:
+    return CardProductsAPI()
 
 
 @pytest.fixture(scope="function")

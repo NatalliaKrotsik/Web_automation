@@ -44,8 +44,8 @@ def _assert_valid(r, value, case_id):
 
 def _assert_invalid(r, value, case_id, expected_error=None):
     assert_that(r.status_code).described_as(
-        f"Expected 422 for value={value!r} [{case_id}]"
-    ).is_equal_to(422)
+        f"Expected 400 for value={value!r} [{case_id}]"
+    ).is_equal_to(400)
     if expected_error:
         error_messages = [
             m["message"]
