@@ -215,17 +215,22 @@ def auth_tokens(load_environment) -> dict:    # always depend on load_environmen
 ## Page Object rules (UI only)
 
 ```python
-from framework.ui.pages.base_page import BasePage
+from playwright.sync_api import Page
 
-class LoginPage(BasePage):
-    """Handles interactions on the Login page."""
+from framework.env_manager import EnvManager
+from framework.ui.core.base_page import BasePage
 
-    _SUBMIT_BUTTON = page.locator(...)   # locator defined here only
 
-    def click_login_button(self) -> None:
-        """Clicks the login submit button."""
-        with allure.step("Click login button"):
-            self._SUBMIT_BUTTON.click()
+class SomePage(BasePage):
+    """Handles interactions on the Some page."""
+
+    def __init__(self, page: Page):
+        super().__init__(page, EnvManager.get_config().base_url + "/some-path")
+        self._submit_button = page.get_by_role("button", name="Submit")
+
+    def click_submit_button(self) -> None:
+        with allure.step("Click submit button"):
+            self._submit_button.click()
 ```
 
 - Inherits from `BasePage`; element classes inherit from `BaseElement`
