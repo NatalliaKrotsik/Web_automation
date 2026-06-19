@@ -11,7 +11,6 @@ pytestmark = [pytest.mark.ui]
 @allure.sub_suite("US-1.8 Show Card Products on the Welcome Page")
 
 class TestCardsModal:
-    @pytest.mark.skip(reason="X button has no stable locator — waiting for data-testid='modal-close-btn' from frontend")
     @allure.title("LP-222 — Click 'Open a card' locate 'X' and click it to close modal")
     @pytest.mark.qase("LP-222")
     @pytest.mark.regression

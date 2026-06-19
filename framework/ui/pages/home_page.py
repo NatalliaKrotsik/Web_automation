@@ -11,7 +11,7 @@ class HomePage(BasePage):
         self._card_heading = page.get_by_role("heading", name="Cards", level=2)
         self._cards_by_button = page.get_by_role("button", name="Open a Card")
         self._cancel_button = page.get_by_role("button", name="Cancel")
-        self._x_button = page.locator("div.flex.items-center.justify-between button")
+        self._x_button = page.get_by_test_id("modal-close-btn")
         self._modal_heading = page.get_by_role("heading", name="Apply for", level=1)
         self._modal_message = page.get_by_text("Select how you would like to proceed")
         self._modal_login_option=page.get_by_role("heading", name="Existing profile", level=2)
