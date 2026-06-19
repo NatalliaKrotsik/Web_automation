@@ -28,8 +28,6 @@ stages:
     - poetry install --no-root --no-interaction --no-ansi
     - poetry run playwright install chromium
     - poetry run playwright install-deps chromium
-  artifacts:
-    expire_in: 1 day
   rules:
     - when: always
 
@@ -41,6 +39,8 @@ ui_tests:
   script:
     - poetry run pytest --alluredir=$ALLURE_DIR $TEST_PATH -n=$PYTEST_WORKERS --env=$ENV
   artifacts:
+    when: always
+    expire_in: 1 day
     paths:
       - allure-results-ui
 
@@ -52,6 +52,8 @@ api_tests:
   script:
     - poetry run pytest --alluredir=$ALLURE_DIR $TEST_PATH -n=$PYTEST_WORKERS --env=$ENV
   artifacts:
+    when: always
+    expire_in: 1 day
     paths:
       - allure-results-api
 
