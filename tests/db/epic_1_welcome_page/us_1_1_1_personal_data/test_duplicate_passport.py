@@ -2,7 +2,7 @@ import allure
 import pytest
 from assertpy import assert_that
 
-pytestmark = [pytest.mark.api]
+pytestmark = [pytest.mark.db, pytest.mark.regression]
 
 
 @allure.parent_suite("API Tests")

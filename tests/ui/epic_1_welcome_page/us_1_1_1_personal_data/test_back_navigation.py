@@ -11,7 +11,12 @@ pytestmark = [pytest.mark.ui]
 @allure.parent_suite("UI Tests")
 @allure.suite("Registration")
 @allure.sub_suite("US-1.1.1 Personal Info")
-class TestBackNavigation:
+class _PersonalInfoBase:
+    """Shared Allure hierarchy for personal info test classes."""
+
+
+@allure.story("Back navigation")
+class TestBackNavigation(_PersonalInfoBase):
 
     @allure.title("TC-76 — Fields pre-filled when navigating back from Contact Details")
     @allure.severity(allure.severity_level.NORMAL)

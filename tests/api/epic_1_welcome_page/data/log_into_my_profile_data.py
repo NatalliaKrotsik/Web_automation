@@ -1,17 +1,53 @@
-import pytest
-
 VALID_SIGN_IN_DATA = [
-    pytest.param("jan.kowalski.test@mailinator.com", "Test@1234!", 200, id="Valid sign in data"),
+    {
+        "name": "valid_sign_in",
+        "email": "jan.kowalski.test@mailinator.com",
+        "password": "Test@1234!",
+        "expected_status": 200,
+    },
 ]
+
 INVALID_SIGN_IN_DATA = [
-    pytest.param(
-        "an.kowalski.test@mailinator.com", "Test@1234!", "Incorrect email or password", 400, id="Invalid email"
-    ),
-    pytest.param("", "Test@1234!", "", 400, id="Empty email"),
-    pytest.param(
-        "Tested@gmail.com", "TempP@ss123", "Incorrect email or password", 400, id="Email doesnt exist in the system"
-    ),
-    pytest.param("xonib78658@inreur.com", "Tesy778!", "Incorrect email or password", 400, id="Wrong password"),
-    pytest.param("xonib78658@inreur.com", "", "", 400, id="empty password"),
-    pytest.param("xonib78658@inreur.com", "Aa12345!", "", 409, id="has already logged in"),
+    {
+        "name": "invalid_email",
+        "email": "an.kowalski.test@mailinator.com",
+        "password": "Test@1234!",
+        "expected_error": "Incorrect email or password",
+        "expected_status": 400,
+    },
+    {
+        "name": "empty_email",
+        "email": "",
+        "password": "Test@1234!",
+        "expected_error": "",
+        "expected_status": 400,
+    },
+    {
+        "name": "email_not_in_system",
+        "email": "Tested@gmail.com",
+        "password": "TempP@ss123",
+        "expected_error": "Incorrect email or password",
+        "expected_status": 400,
+    },
+    {
+        "name": "wrong_password",
+        "email": "xonib78658@inreur.com",
+        "password": "Tesy778!",
+        "expected_error": "Incorrect email or password",
+        "expected_status": 400,
+    },
+    {
+        "name": "empty_password",
+        "email": "xonib78658@inreur.com",
+        "password": "",
+        "expected_error": "",
+        "expected_status": 400,
+    },
+    {
+        "name": "already_logged_in",
+        "email": "xonib78658@inreur.com",
+        "password": "Aa12345!",
+        "expected_error": "",
+        "expected_status": 409,
+    },
 ]

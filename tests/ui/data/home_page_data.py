@@ -1,10 +1,8 @@
-import pytest
-
 NAV_ITEMS = [
-    pytest.param("Cards", id="cards_nav"),
-    pytest.param("Accounts", id="accounts_nav"),
-    pytest.param("Deposits", id="deposits_nav"),
-    pytest.param("Loans", id="loans_nav"),
-    pytest.param("Exchange rates", id="exchange_rates_nav"),
-    pytest.param("ATMs", id="atms_nav"),
+    {"name": "cards_nav", "label": "Cards"},
+    {"name": "accounts_nav", "label": "Accounts"},
+    {"name": "deposits_nav", "label": "Deposits"},
+    {"name": "loans_nav", "label": "Loans"},
+    {"name": "exchange_rates_nav", "label": "Exchange rates"},
+    {"name": "atms_nav", "label": "ATMs"},
 ]
