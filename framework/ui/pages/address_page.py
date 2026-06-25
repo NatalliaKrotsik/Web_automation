@@ -46,7 +46,7 @@ class AddressPage:
     # ── Shared controls ───────────────────────────────────────────────────────
 
     def check_billing_same_as_registration(self):
-        self.page.locator(AddressLocators.BILLING_SAME_AS_REGISTRATION_CHECKBOX).check()
+        self.page.locator(AddressLocators.BILLING_SAME_AS_REGISTRATION_CHECKBOX).dispatch_event("click")
 
     def click_continue(self):
         self.page.locator(AddressLocators.CONTINUE_BUTTON).click()
