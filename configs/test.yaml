@@ -3,8 +3,8 @@ env_name: test
 ui:
   base_url: https://test.pretty-py.andersenlab.dev  
   browser: chromium
-  headless: true
-  slow_mo: 0
+  headless: false
+  slow_mo: 1000
 
 api:
   base_url: https://api-test.pretty-py.andersenlab.dev   
