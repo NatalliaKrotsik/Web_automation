@@ -3,7 +3,7 @@ env_name: test
 ui:
   base_url: https://test.pretty-py.andersenlab.dev  
   browser: chromium
-  headless: false
+  headless: true
   slow_mo: 1000
 
 api:
