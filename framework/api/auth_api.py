@@ -11,6 +11,11 @@ class AuthAPI(HttpClient):
         self.__access_token = None
         self.__refresh_token = None
 
+    @allure.step("Sign in attempt")
+    def sign_in(self, email: str, password: str) -> requests.Response:
+        """Send sign-in request and return raw response without raising on failure."""
+        return self.post(path=self.endpoint + "sign-in", json_body={"email": email, "password": password})
+
     @allure.step("Authorization step")
     def authorization(self, email: str, password: str) -> requests.Response:
         data = {"email": email, "password": password}

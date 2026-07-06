@@ -9,7 +9,12 @@ pytestmark = [pytest.mark.ui]
 @allure.parent_suite("UI Tests")
 @allure.suite("Registration")
 @allure.sub_suite("US-1.1.1 Personal Info")
-class TestFormValidation:
+class _PersonalInfoBase:
+    """Shared Allure hierarchy for personal info test classes."""
+
+
+@allure.story("Form validation")
+class TestFormValidation(_PersonalInfoBase):
 
     @allure.title("TC-04 — Invalid first name shows error message")
     @allure.severity(allure.severity_level.NORMAL)

@@ -172,7 +172,39 @@ class TestFirstName(_SuiteBase):
 
 `pytest_generate_tests` in `tests/conftest.py` reads `test_data_map`, parametrizes matching fixture names automatically, and uses the `"name"` key for readable test IDs.
 
-YAML data files live in `tests/<type>/epic_<n>_<name>/data/<feature>.yaml`. Each entry must have a `name` field (lowercase with underscores). Always include happy path, failure cases, and edge cases. Never duplicate entries — add a new YAML entry instead.
+Test data files live in `tests/<type>/epic_<n>_<name>/data/`. Two formats are allowed — choose one per file and stay consistent within it:
+
+**Option A — YAML** (`<feature>.yaml`):
+```yaml
+- name: valid_polish_chars
+  value: "Łódź"
+  expected_status: 201
+
+- name: too_short_one_char
+  value: "A"
+  expected_status: 400
+```
+
+**Option B — Python** (`<feature>_data.py`):
+```python
+FIRST_NAME_CASES = [
+    {"name": "valid_polish_chars", "value": "Łódź", "expected_status": 201},
+    {"name": "too_short_one_char", "value": "A",    "expected_status": 400},
+]
+```
+Import the list directly into `test_data_map` inside the test class:
+```python
+from tests.api.epic_1_welcome_page.data.first_name_data import FIRST_NAME_CASES
+
+class TestFirstName(_SuiteBase):
+    test_data_map = {"first_name_case": FIRST_NAME_CASES}
+```
+
+Rules that apply to **both** formats:
+- Every entry must have a `name` field (lowercase with underscores)
+- Always include happy path, failure cases, and edge cases
+- Never duplicate entries — add a new entry instead
+- Never put raw data inline inside the test method itself
 
 ---
 
@@ -327,9 +359,10 @@ GitLab CI (`.gitlab-ci.yml`) runs `ui_tests` and `api_tests` in parallel with 4 
 - [ ] No hard waits (`wait_for_timeout`)
 
 **Test Data**
-- [ ] Test data lives in `tests/.../epic_.../data/*.yaml`
-- [ ] YAML file named after the test file
-- [ ] Every entry has a `name` field
+- [ ] Test data lives in `tests/.../epic_.../data/` (YAML or Python file)
+- [ ] YAML file named after the test file (`<feature>.yaml`) OR Python file named `<feature>_data.py`
+- [ ] Only one format used per feature — not mixed
+- [ ] Every entry has a `name` field (lowercase with underscores)
 - [ ] Happy path, failure cases, and edge cases all covered
 
 **Parametrize**
