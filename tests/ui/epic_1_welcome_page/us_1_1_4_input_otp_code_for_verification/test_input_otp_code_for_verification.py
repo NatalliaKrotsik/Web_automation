@@ -15,6 +15,11 @@ pytestmark = [pytest.mark.ui]
 @allure.feature("Sign up")
 @allure.suite("Welcome Page")
 @allure.sub_suite("US-1.1.4 Input OTP Code for Verification")
+@pytest.mark.skip(
+    reason="US-1.1.4 OTP email verification cannot be fully automated. "
+    "Root causes:Only one shared test Gmail account (pretty.aqa@gmail.com) available for OTP retrieval, "
+    "which gets locked after repeated sign-up attempts triggering CAPTCHA. "
+)
 class _signUpBase:
     pass
 
