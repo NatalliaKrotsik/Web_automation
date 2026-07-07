@@ -122,9 +122,10 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
     "api: pytest mark used for API tests",
-    "smoke: pytest mark used for Smoke tests",
     "ui: pytest mark used for UI tests",
-    "dependency: mark test as depending on another test",
+    "db: pytest mark used for database tests",
+    "smoke: pytest mark used for Smoke tests",
     "regression: mark test as part of regression suites",
+    "dependency: mark test as depending on another test",
     "qase: Qase test case markers"
 ]

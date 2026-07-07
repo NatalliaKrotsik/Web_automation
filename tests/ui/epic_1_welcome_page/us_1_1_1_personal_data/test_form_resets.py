@@ -11,7 +11,12 @@ pytestmark = [pytest.mark.ui]
 @allure.parent_suite("UI Tests")
 @allure.suite("Registration")
 @allure.sub_suite("US-1.1.1 Personal Info")
-class TestFormResets:
+class _PersonalInfoBase:
+    """Shared Allure hierarchy for personal info test classes."""
+
+
+@allure.story("Form resets")
+class TestFormResets(_PersonalInfoBase):
 
     @allure.title("TC-78 — Fields are empty after page reload")
     @allure.severity(allure.severity_level.NORMAL)

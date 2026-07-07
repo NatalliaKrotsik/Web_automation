@@ -52,9 +52,10 @@ class HomePage(BasePage):
         expect(self._modal_sign_up_option).to_be_visible()
 
     def expect_redirect_to_login(self):
-        self.page.wait_for_url("**/login")
+        expect(self.page).to_have_url("**/login")
+
     def expect_redirect_to_signup(self):
-        self.page.wait_for_url("**/sign-up")
+        expect(self.page).to_have_url("**/sign-up")
     # Actions
 
     def click_x_button(self):
