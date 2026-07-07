@@ -13,6 +13,11 @@ pytestmark = [pytest.mark.api]
 @allure.parent_suite("API Tests")
 @allure.suite("Welcome Page")
 @allure.sub_suite("US-1.1.6 Generate a temporary password")
+@pytest.mark.skip(
+    reason="Key blocker: DB automation cannot be done "
+    "Email verification of temporary password also blocked — only one shared test Gmail account "
+    "(pretty.aqa@gmail.com) exists and is reserved for OTP verification (US-1.1.4)."
+)
 class _GenerateTemporaryPassword:
     """Shared Allure labels for all exchange rate test classes."""
 
