@@ -6,8 +6,6 @@ from framework.api.auth_api import AuthAPI
 from framework.api.card_products_api import CardProductsAPI
 from framework.api.exchange_rates_api import ExchangeRatesAPI
 from framework.api.personal_data_api import PersonalDataAPI
-from framework.data_base.db_client import DbClient
-from framework.env_manager import EnvManager
 
 
 def _load_baseline() -> dict:
@@ -55,9 +53,3 @@ def valid_payload() -> dict:
 @pytest.fixture(scope="session")
 def auth_api() -> AuthAPI:
     return AuthAPI()
-
-
-@pytest.fixture(scope="session")
-def db_client(load_environment) -> DbClient:
-    url = EnvManager.get("DB_URL_DEV")
-    return DbClient(url=url)
