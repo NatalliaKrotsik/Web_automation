@@ -95,12 +95,6 @@ class AtmPage(BasePage):
     def get_card_count(self):
         return self._location_card.count()
 
-    def expect_map_and_list_counts_match(self):
-        pin_match = self.get_visible_pin_count()
-        card_match = self.get_card_count()
-
-        assert pin_match == card_match
-
     def enter_city_name(self, city):
         self._city_search_bar.fill(city)
         self.page.wait_for_timeout(2000)
