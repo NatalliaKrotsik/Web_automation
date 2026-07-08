@@ -2,6 +2,8 @@ import pytest
 import yaml
 
 from framework.api.address_api import AddressAPI
+from framework.api.auth_api import AuthAPI
+from framework.api.calculator_api import CalculatorAPI
 from framework.api.card_products_api import CardProductsAPI
 from framework.api.exchange_rates_api import ExchangeRatesAPI
 from framework.api.personal_data_api import PersonalDataAPI
@@ -13,6 +15,16 @@ def _load_baseline() -> dict:
 
 
 _BASELINE = _load_baseline()
+
+
+@pytest.fixture(scope="function")
+def auth_api() -> AuthAPI:
+    return AuthAPI()
+
+
+@pytest.fixture(scope="function")
+def calculator_api() -> CalculatorAPI:
+    return CalculatorAPI()
 
 
 @pytest.fixture(scope="function")
