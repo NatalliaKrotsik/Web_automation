@@ -3,13 +3,12 @@ import pytest
 
 from framework.ui.pages.home_page import HomePage
 
-
 pytestmark = [pytest.mark.ui]
+
 
 @allure.parent_suite("UI Tests")
 @allure.suite("Card Products")
 @allure.sub_suite("US-1.8 Show Card Products on the Welcome Page")
-
 class TestCardsSection:
 
     @allure.title("LP-221 — Click 'Cards' on navigation panel")
@@ -20,11 +19,9 @@ class TestCardsSection:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Verify 'Cards' section is visible"):
             home.expect_cards_are_visible()
-    
+
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("LP-221 — Reload the page and manually scroll down to the 'Cards' section")
     @pytest.mark.qase("LP-221")

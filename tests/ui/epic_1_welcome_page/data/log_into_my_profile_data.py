@@ -17,7 +17,7 @@ INVALID_SIGN_IN_DATA = [
     pytest.param(
         "Tested@gmail.com",
         "TempP@ss123",
-        "Email doesn't exist. Please check and try again",
+        "Incorrect email or password",
         id="Email doesn't exist in the system",
     ),
     pytest.param(

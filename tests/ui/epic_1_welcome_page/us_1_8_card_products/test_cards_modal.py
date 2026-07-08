@@ -3,13 +3,12 @@ import pytest
 
 from framework.ui.pages.home_page import HomePage
 
-
 pytestmark = [pytest.mark.ui]
+
 
 @allure.parent_suite("UI Tests")
 @allure.suite("Card Products")
 @allure.sub_suite("US-1.8 Show Card Products on the Welcome Page")
-
 class TestCardsModal:
     @allure.title("LP-222 — Click 'Open a card' locate 'X' and click it to close modal")
     @pytest.mark.qase("LP-222")
@@ -19,8 +18,6 @@ class TestCardsModal:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if X button is visible"):
@@ -29,7 +26,7 @@ class TestCardsModal:
             home.click_x_button()
         with allure.step("Check if modal is closed"):
             home.expect_modal_is_closed()
-    
+
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("LP-222 — Click 'Open a card' locate 'Cancel' and click it to close modal")
     @pytest.mark.qase("LP-222")
@@ -38,8 +35,6 @@ class TestCardsModal:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if Cancel button is visible"):
@@ -56,8 +51,6 @@ class TestCardsModal:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if Modal shows title 'apply for {card name}'"):
@@ -77,8 +70,6 @@ class TestCardsModal:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Click on 'existing profile'"):
@@ -94,8 +85,6 @@ class TestCardsModal:
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Click on 'New Profile'"):

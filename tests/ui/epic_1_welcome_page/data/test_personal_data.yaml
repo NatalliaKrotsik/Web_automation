@@ -18,8 +18,8 @@ invalid:
     value: "!!!"
     expected_error: "Must be between 7 and 20 characters"
   birth_date:
-    value: "99/99/9999"
-    expected_error: "Invalid birth date"
+    value: "01/01/2026"
+    expected_error: "Registration is available only for users aged 18 and older"
 
 duplicate_passport:
   passport_id: "5429469DIFH7799"

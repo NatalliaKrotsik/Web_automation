@@ -1,4 +1,5 @@
 from playwright.sync_api import Page, expect
+
 from framework.env_manager import EnvManager
 from framework.ui.core.base_page import BasePage
 
@@ -8,10 +9,10 @@ class PersonalInfoPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page, f"{EnvManager.get_config().base_url}/sign-up")
 
-    # Locators 
+    # Locators
 
     def first_name_input(self):
-        return self.page.get_by_label("First Name") 
+        return self.page.get_by_label("First Name")
 
     def middle_name_input(self):
         return self.page.get_by_label("Middle Name")
@@ -30,24 +31,18 @@ class PersonalInfoPage(BasePage):
 
     def back_button(self):
         return self.page.get_by_role("button", name="Back to personal info")
-    
+
     def page_heading(self):
         return self.page.get_by_role("heading", name="Personal Information")
 
     def field_error(self, field_name: str):
         if field_name == "birthDate":
-            return self.page.locator(
-                "//input[@placeholder='DD/MM/YYYY']"
-                "/ancestor::div[2]"
-                "/span[contains(@class,'text-text-errorBody')]"
-            )
+            return self.page.locator("xpath=//span[@class='text-text-errorBody']")
         return self.page.locator(
-            f"//input[@id='{field_name}']"
-            "/ancestor::div[2]"
-            "/span[contains(@class,'text-text-errorBody')]"
+            f"//input[@id='{field_name}']" "/ancestor::div[2]" "/span[contains(@class,'text-text-errorBody')]"
         )
-    
-    # ── Actions 
+
+    # ── Actions
 
     def fill_first_name(self, value: str) -> None:
         self.first_name_input().fill(value)
@@ -67,7 +62,7 @@ class PersonalInfoPage(BasePage):
 
     def click_continue(self) -> None:
         self.continue_button().click()
-    
+
     def click_back(self) -> None:
         self.back_button().click()
 

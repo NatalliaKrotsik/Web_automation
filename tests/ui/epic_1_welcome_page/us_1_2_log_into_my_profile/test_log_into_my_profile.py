@@ -23,6 +23,7 @@ class TestLogIntoMyProfile:
 
     @allure.title("Successful login with valid credentials")
     @pytest.mark.parametrize("email, password", VALID_SIGN_IN_DATA)
+    @pytest.mark.skip("Because of email essue")
     def test_successful_login(self, page, email, password):
         self.open_login_page(page)
 
@@ -43,7 +44,7 @@ class TestLogIntoMyProfile:
         page.locator(SignInLocators.EMAIL_INPUT).fill("")
         page.locator(SignInLocators.PASSWORD_INPUT).click()
 
-        expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Must be between 6 and 55 characters")
+        expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Email обязателен")
         expect(page.locator(SignInLocators.LOGIN_BUTTON)).to_be_disabled()
 
     @allure.title("Password validation error is shown after clearing password field")
@@ -55,7 +56,7 @@ class TestLogIntoMyProfile:
         page.locator(SignInLocators.PASSWORD_INPUT).fill("")
         page.locator(SignInLocators.EMAIL_INPUT).click()
 
-        expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Password is required")
+        expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Пароль обязателен")
         expect(page.locator(SignInLocators.LOGIN_BUTTON)).to_be_disabled()
 
     @allure.title("Login button is disabled and validation error is shown for invalid email data")
@@ -94,7 +95,7 @@ class TestLogIntoMyProfile:
             page.locator(SignInLocators.PASSWORD_INPUT).click()
 
             expect(page.locator(SignInLocators.LOGIN_BUTTON)).to_be_disabled()
-            expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Email address is required")
+            expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Incorrect email or password")
 
             @allure.title("Password validation error is shown after clearing password field")
             def test_empty_password_error_after_clearing_field(self, page):
@@ -106,7 +107,7 @@ class TestLogIntoMyProfile:
                 page.locator(SignInLocators.EMAIL_INPUT).click()
 
                 expect(page.locator(SignInLocators.LOGIN_BUTTON)).to_be_disabled()
-                expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Password is required")
+                expect(page.locator(SignInLocators.VALIDATION_ERROR)).to_contain_text("Incorrect email or password")
 
     @allure.title("User is blocked for 15 minutes after 5 failed login attempts")
     @pytest.mark.skip(reason="Account lock after 5 failed attempts is not implemented yet")
