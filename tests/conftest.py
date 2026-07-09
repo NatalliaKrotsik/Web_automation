@@ -106,9 +106,22 @@ def browser(load_environment):
         browser.close()
 
 
+def _dismiss_cookie_banner(new_page):
+    # Cookie banner is fixed at the bottom of the page and blocks clicks on
+    # lower-page elements until dismissed; best-effort since it only appears once per context.
+    def _accept(*_args):
+        try:
+            new_page.get_by_role("button", name="Accept all").click(timeout=1000)
+        except Exception:
+            pass
+
+    new_page.on("load", _accept)
+
+
 @pytest.fixture(scope="function")
 def context(browser):
     ctx = browser.new_context()
+    ctx.on("page", _dismiss_cookie_banner)
     yield ctx
     ctx.close()
 

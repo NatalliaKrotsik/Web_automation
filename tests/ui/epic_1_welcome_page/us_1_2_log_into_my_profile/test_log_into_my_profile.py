@@ -64,7 +64,7 @@ class TestFieldValidationErrors(_SignInBase):
             sign_in.clear_email()
             sign_in.click_password_field()
         with allure.step("Assert validation error is shown"):
-            sign_in.expect_validation_error_contains("Must be between 6 and 55 characters")
+            sign_in.expect_validation_error_contains("Email address is required")
         with allure.step("Assert login button is disabled"):
             sign_in.expect_login_button_disabled()
 

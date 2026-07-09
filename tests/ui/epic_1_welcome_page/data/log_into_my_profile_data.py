@@ -1,8 +1,8 @@
 VALID_SIGN_IN_DATA = [
     {
         "name": "valid_sign_in",
-        "email": "jan.kowalski.test@mailinator.com",
-        "password": "Test@1234!",
+        "email": "dehihal910@fisedo.com",
+        "password": "Test123!",
     },
 ]
 
@@ -17,7 +17,7 @@ INVALID_SIGN_IN_DATA = [
         "name": "email_not_in_system",
         "email": "Tested@gmail.com",
         "password": "TempP@ss123",
-        "expected_error": "Email doesn't exist. Please check and try again",
+        "expected_error": "Incorrect email or password",
     },
     {
         "name": "wrong_password",

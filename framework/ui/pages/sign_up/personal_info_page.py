@@ -29,6 +29,9 @@ class PersonalInfoPage(BasePage):
     def continue_button(self):
         return self.page.get_by_role("button", name="Continue")
 
+    def date_picker_apply_button(self):
+        return self.page.get_by_role("button", name="Apply")
+
     def back_button(self):
         return self.page.get_by_role("button", name="Back to personal info")
 
@@ -58,7 +61,9 @@ class PersonalInfoPage(BasePage):
 
     def fill_birth_date(self, value: str) -> None:
         self.birth_date_input().fill(value)
-        self.page.keyboard.press("Escape")
+        # Filling opens a custom date-picker popup that Escape does not close;
+        # it only closes via its own Apply button, otherwise it overlaps later fields/buttons.
+        self.date_picker_apply_button().click()
 
     def click_continue(self) -> None:
         self.continue_button().click()

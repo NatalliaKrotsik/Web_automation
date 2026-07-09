@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import Page, expect
 
 from framework.env_manager import EnvManager
@@ -8,7 +10,7 @@ class HomePage(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page, EnvManager.get_config().base_url)
-        self._card_heading = page.get_by_role("heading", name="Карты" or "Cards", level=2)
+        self._card_heading = page.get_by_role("heading", name=re.compile("Карты|Cards"), level=2)
         self._cards_by_button = page.get_by_role("button", name="Open a Card")
         self._cancel_button = page.get_by_role("button", name="Cancel")
         self._x_button = page.get_by_test_id("modal-close-btn")
@@ -52,10 +54,10 @@ class HomePage(BasePage):
         expect(self._modal_sign_up_option).to_be_visible()
 
     def expect_redirect_to_login(self):
-        expect(self.page).to_have_url("**/login")
+        expect(self.page).to_have_url(f"{EnvManager.get_config().base_url}/login")
 
     def expect_redirect_to_signup(self):
-        expect(self.page).to_have_url("**/sign-up")
+        expect(self.page).to_have_url(f"{EnvManager.get_config().base_url}/sign-up")
 
     # Actions
 
