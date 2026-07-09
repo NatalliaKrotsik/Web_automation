@@ -37,3 +37,16 @@ class AuthAPI(HttpClient):
     @allure.step("Session ping step")
     def session_ping(self, access_token: str) -> requests.Response:
         return self.post(path=self.endpoint + "session/ping", json_body={"accessToken": access_token})
+
+    @allure.step("User sign up")
+    def sign_up(
+        self, personal_info: dict, contact: dict, addresses: list, agreements: list, billing_same_as_registration: bool
+    ) -> requests.Response:
+        data = {
+            "personalInfo": personal_info,
+            "contact": contact,
+            "addresses": addresses,
+            "agreements": agreements,
+            "billingSameAsRegistration": billing_same_as_registration,
+        }
+        return self.post(path=self.endpoint + "sign-up", json_body=data)

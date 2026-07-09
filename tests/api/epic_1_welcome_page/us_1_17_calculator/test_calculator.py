@@ -36,30 +36,30 @@ class TestValidCalculation(_CalculatorBase):
                 get_amount=calc_case["get_amount"],
             )
         with allure.step("Assert status code is 200"):
-            assert_that(response.status_code).described_as(
-                f"Expected 200 for case {calc_case['name']!r}"
-            ).is_equal_to(200)
+            assert_that(response.status_code).described_as(f"Expected 200 for case {calc_case['name']!r}").is_equal_to(
+                200
+            )
         with allure.step("Assert response currencies match request"):
             body = response.json()
-            assert_that(body["sellCurrency"]).described_as(
-                "sellCurrency in response must match request"
-            ).is_equal_to(calc_case["sell_currency"])
-            assert_that(body["getCurrency"]).described_as(
-                "getCurrency in response must match request"
-            ).is_equal_to(calc_case["get_currency"])
+            assert_that(body["sellCurrency"]).described_as("sellCurrency in response must match request").is_equal_to(
+                calc_case["sell_currency"]
+            )
+            assert_that(body["getCurrency"]).described_as("getCurrency in response must match request").is_equal_to(
+                calc_case["get_currency"]
+            )
         with allure.step("Assert computed amount is present"):
             if calc_case["sell_amount"] is not None:
-                assert_that(body["sellAmount"]).described_as(
+                assert_that(float(body["sellAmount"]) if body.get("sellAmount") is not None else None).described_as(
                     "sellAmount must equal request value"
                 ).is_equal_to(calc_case["sell_amount"])
-                assert_that(body["getAmount"]).described_as(
+                assert_that(float(body["getAmount"]) if body.get("getAmount") is not None else None).described_as(
                     "getAmount must be computed (not None)"
                 ).is_not_none()
             if calc_case["get_amount"] is not None:
-                assert_that(body["getAmount"]).described_as(
+                assert_that(float(body["getAmount"]) if body.get("getAmount") is not None else None).described_as(
                     "getAmount must equal request value"
                 ).is_equal_to(calc_case["get_amount"])
-                assert_that(body["sellAmount"]).described_as(
+                assert_that(float(body["sellAmount"]) if body.get("sellAmount") is not None else None).described_as(
                     "sellAmount must be computed (not None)"
                 ).is_not_none()
 
@@ -86,6 +86,6 @@ class TestCalculatorValidationErrors(_CalculatorBase):
                 f"Expected {calc_case['expected_status']} for case {calc_case['name']!r}"
             ).is_equal_to(calc_case["expected_status"])
         with allure.step(f"Assert error message: {calc_case['expected_error']!r}"):
-            assert_that(str(response.json())).described_as(
-                "Response must contain expected error text"
-            ).contains(calc_case["expected_error"])
+            assert_that(str(response.json())).described_as("Response must contain expected error text").contains(
+                calc_case["expected_error"]
+            )

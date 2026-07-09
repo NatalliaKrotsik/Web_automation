@@ -103,6 +103,7 @@ class AtmPage(BasePage):
 
     def enter_city_name(self, city):
         self._city_search_bar.fill(city)
+        self.page.wait_for_timeout(2000)
 
     def clear_city_name(self):
         self._city_search_bar.clear()
