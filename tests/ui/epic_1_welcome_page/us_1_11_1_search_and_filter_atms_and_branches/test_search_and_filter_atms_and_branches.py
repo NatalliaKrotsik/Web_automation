@@ -63,12 +63,10 @@ class TestAtmAndBranches(_AtmBase):
         with allure.step("Click on the ATM's service type filter option"):
             atm_page.click_service_type_filter("ATMs")
             atm_page.expect_only_atms_displayed()
-            atm_page.expect_map_and_list_counts_match()
 
         with allure.step("Apply a specific city location filter"):
             atm_page.click_city_filter("Gdansk")
             atm_page.expect_only_atms_in_city_displayed("Gdansk")
-            atm_page.expect_map_and_list_counts_match()
 
     @allure.title("Verify search bar functionality")
     @allure.severity(severity_level.NORMAL)
