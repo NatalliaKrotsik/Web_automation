@@ -5,6 +5,8 @@ from framework.ui.pages.home_page import HomePage
 
 pytestmark = [pytest.mark.ui, pytest.mark.regression]
 
+pytestmark = [pytest.mark.ui]
+
 
 
 @allure.parent_suite("UI Tests")

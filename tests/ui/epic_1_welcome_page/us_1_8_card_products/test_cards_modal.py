@@ -23,8 +23,6 @@ class TestCardsModalClose(_CardModalBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if X button is visible"):
@@ -41,8 +39,6 @@ class TestCardsModalClose(_CardModalBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if Cancel button is visible"):
@@ -63,8 +59,6 @@ class TestCardsModalContent(_CardModalBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Check if Modal shows title 'apply for {card name}'"):
@@ -87,8 +81,6 @@ class TestCardsModalRedirects(_CardModalBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Click on 'existing profile'"):
@@ -103,8 +95,6 @@ class TestCardsModalRedirects(_CardModalBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Click on 'open a card' button"):
             home.click_open_a_card()
         with allure.step("Click on 'New Profile'"):
