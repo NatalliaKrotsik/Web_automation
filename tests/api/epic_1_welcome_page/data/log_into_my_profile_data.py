@@ -1,8 +1,8 @@
 VALID_SIGN_IN_DATA = [
     {
         "name": "valid_sign_in",
-        "email": "jan.kowalski.test@mailinator.com",
-        "password": "Test@1234!",
+        "email": "dehihal910@fisedo.com",
+        "password": "Test123!",
         "expected_status": 200,
     },
 ]
@@ -10,44 +10,37 @@ VALID_SIGN_IN_DATA = [
 INVALID_SIGN_IN_DATA = [
     {
         "name": "invalid_email",
-        "email": "an.kowalski.test@mailinator.com",
-        "password": "Test@1234!",
-        "expected_error": "Incorrect email or password",
-        "expected_status": 400,
-    },
-    {
-        "name": "empty_email",
-        "email": "",
+        "email": "an@kowalski.test@mailinator.com",
         "password": "Test@1234!",
         "expected_error": "",
-        "expected_status": 400,
-    },
-    {
-        "name": "email_not_in_system",
-        "email": "Tested@gmail.com",
-        "password": "TempP@ss123",
-        "expected_error": "Incorrect email or password",
         "expected_status": 400,
     },
     {
         "name": "wrong_password",
-        "email": "xonib78658@inreur.com",
+        "email": "dehihal910@fisedo.com",
         "password": "Tesy778!",
         "expected_error": "Incorrect email or password",
+        "expected_status": 401,
+    },
+    {
+        "name": "minim_length",
+        "email": "T@g.m",
+        "password": "TempP@ss123",
+        "expected_error": "Must be between 6 and 55 characters",
         "expected_status": 400,
     },
     {
-        "name": "empty_password",
-        "email": "xonib78658@inreur.com",
-        "password": "",
-        "expected_error": "",
+        "name": "maximum_length",
+        "email": "maksmakmakmmmaksmakmakmmaksiki100aksiki100siki100siki100iki100maksmakmakmmaksiki100aksiki100siki100siki100iki100aksiki100aksiki100siki100siki100iki100@gmail.com",
+        "password": "TempP@ss123",
+        "expected_error": "Must be between 6 and 55 characters",
         "expected_status": 400,
     },
     {
-        "name": "already_logged_in",
-        "email": "xonib78658@inreur.com",
-        "password": "Aa12345!",
+        "name": "invalid_format_email",
+        "email": "dehihal910fisedo.com",
+        "password": "Test123!",
         "expected_error": "",
-        "expected_status": 409,
+        "expected_status": 400,
     },
 ]

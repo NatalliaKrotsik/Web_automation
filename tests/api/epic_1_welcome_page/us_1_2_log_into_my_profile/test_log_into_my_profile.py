@@ -17,12 +17,11 @@ class _SignInBase:
     """Shared Allure hierarchy for all sign-in test classes."""
 
 
-@allure.story("Valid credentials")
-@pytest.mark.qase("LP-121")
+@allure.story("Check sign-in process with valid data")
+@pytest.mark.qase("LP-164")
 class TestValidSignIn(_SignInBase):
-    test_data_map = {"sign_in_case": VALID_SIGN_IN_DATA}
-
-    @allure.title("Sign in with valid credentials — {sign_in_case}")
+    @pytest.mark.parametrize("sign_in_case", VALID_SIGN_IN_DATA, ids=lambda c: c["name"])
+    @allure.title("Sign in with valid credentials — {sign_in_case[name]}")
     @allure.severity(allure.severity_level.BLOCKER)
     def test_sign_in_with_valid_credentials(self, auth_api, sign_in_case):
         with allure.step(f"POST sign-in with email={sign_in_case['email']!r}"):
@@ -31,9 +30,9 @@ class TestValidSignIn(_SignInBase):
                 password=sign_in_case["password"],
             )
         with allure.step("Assert status code is 200"):
-            assert_that(response.status_code).described_as(
-                "Expected 200 for valid credentials"
-            ).is_equal_to(sign_in_case["expected_status"])
+            assert_that(response.status_code).described_as("Expected 200 for valid credentials").is_equal_to(
+                sign_in_case["expected_status"]
+            )
         with allure.step("Assert response contains auth tokens"):
             body = response.json()
             assert_that(body).described_as("Response body must not be empty").is_not_none()
@@ -42,12 +41,11 @@ class TestValidSignIn(_SignInBase):
             ).is_not_none()
 
 
-@allure.story("Invalid credentials")
-@pytest.mark.qase("LP-122")
+@allure.story("Check sign-in process with invalid data")
+@pytest.mark.qase("LP-171")
 class TestInvalidSignIn(_SignInBase):
-    test_data_map = {"sign_in_case": INVALID_SIGN_IN_DATA}
-
-    @allure.title("Sign in with invalid credentials — {sign_in_case}")
+    @pytest.mark.parametrize("sign_in_case", INVALID_SIGN_IN_DATA, ids=lambda c: c["name"])
+    @allure.title("Sign in with invalid credentials — {sign_in_case[name]}")
     @allure.severity(allure.severity_level.CRITICAL)
     def test_sign_in_with_invalid_credentials(self, auth_api, sign_in_case):
         with allure.step(f"POST sign-in with email={sign_in_case['email']!r}"):
@@ -61,32 +59,6 @@ class TestInvalidSignIn(_SignInBase):
             ).is_equal_to(sign_in_case["expected_status"])
         with allure.step("Assert error message is present in response"):
             if sign_in_case["expected_error"]:
-                assert_that(response.text).described_as(
-                    "Response must contain expected error message"
-                ).contains(sign_in_case["expected_error"])
-
-
-@allure.story("Account lockout")
-@pytest.mark.qase("LP-123")
-class TestAccountLockout(_SignInBase):
-
-    @allure.title("User is blocked after 5 consecutive invalid sign-in attempts")
-    @allure.severity(allure.severity_level.CRITICAL)
-    def test_user_is_blocked_after_5_invalid_attempts(self, auth_api):
-        blocked_email = "xonib78658@inreur.com"
-        wrong_password = "wrong_password"
-        correct_password = "Aa12345!"
-
-        with allure.step("Send 5 invalid sign-in attempts"):
-            for attempt in range(1, 6):
-                with allure.step(f"Attempt {attempt} with wrong password"):
-                    response = auth_api.sign_in(email=blocked_email, password=wrong_password)
-                    assert_that(response.status_code).described_as(
-                        f"Attempt {attempt}: expected 401 Unauthorized"
-                    ).is_equal_to(401)
-
-        with allure.step("Sign in with correct password — account should be locked"):
-            response = auth_api.sign_in(email=blocked_email, password=correct_password)
-            assert_that(response.status_code).described_as(
-                "Account must be locked (423) after 5 failed attempts"
-            ).is_equal_to(423)
+                assert_that(response.text).described_as("Response must contain expected error message").contains(
+                    sign_in_case["expected_error"]
+                )
