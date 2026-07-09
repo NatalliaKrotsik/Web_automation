@@ -6,6 +6,7 @@ from framework.ui.pages.home_page import HomePage
 pytestmark = [pytest.mark.ui, pytest.mark.regression]
 
 
+
 @allure.parent_suite("UI Tests")
 @allure.suite("Card Products")
 @allure.sub_suite("US-1.8 Show Card Products on the Welcome Page")
@@ -23,8 +24,6 @@ class TestCardsSection(_CardSectionBase):
         home = HomePage(page)
         with allure.step("Open home page"):
             home.open()
-        with allure.step("Click on 'Cards' navigation button"):
-            home.get_nav_button("Cards").click()
         with allure.step("Verify 'Cards' section is visible"):
             home.expect_cards_are_visible()
 
