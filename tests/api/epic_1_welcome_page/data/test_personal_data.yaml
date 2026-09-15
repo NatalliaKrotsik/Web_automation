@@ -1,0 +1,438 @@
+# US-1.1.1 Personal Info — API test data
+# Feeds: test_name.py, test_passport_id.py, test_birth_date.py,
+#        test_happy_path.py, test_duplicate_passport.py
+# Error messages verified against dev API responses (May 2026)
+
+
+valid_baseline:
+  first_name: "Ivan"
+  middle_name: "Pavel"
+  last_name: "Petrov"
+  passport_id: "BR2541789"
+  birth_date: "01\\01\\1990"
+
+
+happy_path:
+  first_name: "Ivan"
+  middle_name: "Vladimir"
+  last_name: "Ihnatsenkau"
+  passport_id: "BM123451"
+  birth_date: "01\\01\\2000"
+
+
+duplicate_passport:
+  existing_passport_id: "5429469DIFH7799"
+
+
+# First Name (LP-36 valid, LP-37 invalid)
+
+first_name:
+  valid:
+    - id: "fn-v-01"
+      value: "pavel"
+      description: "lowercase Latin letters accepted"
+
+    - id: "fn-v-02"
+      value: "Pavel"
+      description: "uppercase accepted"
+
+    - id: "fn-v-03"
+      value: "PaVel"
+      description: "mixcase accepted"
+
+    - id: "fn-v-04"
+      value: "Pav-el"
+      description: "hyphen in middle accepted"
+
+    - id: "fn-v-05"
+      value: "Pavel-Pavlov"
+      description: "hyphen between words accepted"
+
+    - id: "fn-v-06"
+      value: "Pa"
+      description: "2 characters — min boundary"
+
+    - id: "fn-v-07"
+      value: "Pavefafsvdbsbdsfasdfsadfsd"
+      description: "30 characters — max boundary"
+
+    - id: "fn-v-08"
+      value: "Łódź"
+      description: "Polish special characters accepted"
+
+    - id: "fn-v-10"
+      value: "qqqqqqqqqqqqqqqqqqqq                    eeeeeeeee"
+      description: "20 chars + 20 spaces + 9 chars — internal spaces collapsed"
+
+  invalid:
+    - id: "fn-i-01"
+      value: "!"
+      description: "single special character — too short, length check fires first"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "fn-i-02"
+      value: "@"
+      description: "single special character — too short, length check fires first"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "fn-i-03"
+      value: "Ł"
+      description: "1 character — below min boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "fn-i-04"
+      value: "ŁódźŁódźŁódźŁódźŁódźŁódźŁódźŁód"
+      description: "31 characters — above max boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "fn-i-05"
+      value: "  "
+      description: "spaces only — leading/trailing spaces check fires first"
+      expected_error: "Leading or trailing spaces are not allowed."
+
+    - id: "fn-i-06"
+      value: "-Łódź"
+      description: "hyphen at beginning rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "fn-i-07"
+      value: "Łódź-"
+      description: "hyphen at end rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "fn-i-08"
+      value: "ŁódźŁódźŁódźŁódźŁódźŁódźŁódźŁó   "
+      description: "trailing spaces rejected"
+      expected_error: "Leading or trailing spaces are not allowed."
+
+
+# Last Name (LP-39 valid, LP-41 invalid)
+
+last_name:
+  valid:
+    - id: "ln-v-01"
+      value: "Pavel"
+      description: "uppercase accepted"
+
+    - id: "ln-v-02"
+      value: "pavel"
+      description: "lowercase accepted — stored as Pavel"
+
+    - id: "ln-v-03"
+      value: "PaVeL"
+      description: "mixcase accepted"
+
+    - id: "ln-v-04"
+      value: "Pa-vel"
+      description: "hyphen in middle accepted"
+
+    - id: "ln-v-05"
+      value: "Pa"
+      description: "2 characters — min boundary"
+
+    - id: "ln-v-06"
+      value: "PavelPavelPavelPavelPavelPavel"
+      description: "30 characters — max boundary"
+
+    - id: "ln-v-07"
+      value: "Łódź"
+      description: "Polish special characters accepted"
+
+    - id: "ln-v-09"
+      value: "qqqqqqqqqqqqqqqqqqq                    eeeeeeeeee"
+      description: "19 chars + 20 spaces + 10 chars — internal spaces collapsed"
+
+  invalid:
+    - id: "ln-i-01"
+      value: "!"
+      description: "single special character — too short, length check fires first"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "ln-i-02"
+      value: "Ł"
+      description: "1 character — below min boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "ln-i-03"
+      value: "ŁódźŁódźŁódźŁódźŁódźŁódźŁódźŁód"
+      description: "31 characters — above max boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "ln-i-04"
+      value: "  "
+      description: "spaces only — leading/trailing spaces check fires first"
+      expected_error: "Leading or trailing spaces are not allowed."
+
+    - id: "ln-i-05"
+      value: "-środa"
+      description: "hyphen at beginning rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "ln-i-06"
+      value: "środa-"
+      description: "hyphen at end rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "ln-i-07"
+      value: "ŁódźŁódźŁódźŁódźŁódźŁódźŁódźŁódź "
+      description: "trailing spaces rejected"
+      expected_error: "Leading or trailing spaces are not allowed."
+
+
+# Middle Name (LP-329 valid, LP-330 invalid)
+
+middle_name:
+  valid:
+    - id: "mn-v-01"
+      value: "Pavel"
+      description: "Latin letters accepted"
+
+    - id: "mn-v-02"
+      value: "łódź"
+      description: "Polish characters accepted"
+
+    - id: "mn-v-03"
+      value: null
+      description: "field is optional — null accepted"
+
+    - id: "mn-v-04"
+      value: "ćńóśźżąęł"
+      description: "Polish special letters accepted"
+
+    - id: "mn-v-05"
+      value: "Id"
+      description: "2 characters — min boundary"
+
+    - id: "mn-v-06"
+      value: "Idd"
+      description: "3 characters — boundary"
+
+    - id: "mn-v-07"
+      value: "pjzlfmdxzrqppndyuatfkclujvemx"
+      description: "29 characters — boundary"
+
+    - id: "mn-v-08"
+      value: "pjzlfmdxzrqppndyuatfkclujvemxe"
+      description: "30 characters — max boundary"
+
+    - id: "mn-v-09"
+      value: "pavel"
+      description: "lowercase accepted"
+
+    - id: "mn-v-10"
+      value: "PAVEL"
+      description: "uppercase accepted"
+
+    - id: "mn-v-11"
+      value: "PaVel"
+      description: "mixcase accepted"
+
+    - id: "mn-v-12"
+      value: "Pa-vel"
+      description: "hyphen in middle accepted"
+
+  invalid:
+    - id: "mn-i-01"
+      value: "I"
+      description: "1 character — below min boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "mn-i-02"
+      value: "pjzlfmdxzrqppndyuatfkclujvemxef"
+      description: "31 characters — above max boundary"
+      expected_error: "Must be between 2 and 30 characters long."
+
+    - id: "mn-i-03"
+      value: "но"
+      description: "Russian letters rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-04"
+      value: "гЎ"
+      description: "Belarusian letters rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-05"
+      value: "!!"
+      description: "special character pairs rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-06"
+      value: "@@"
+      description: "special character pairs rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-07"
+      value: "-Pavel"
+      description: "hyphen at beginning rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "mn-i-08"
+      value: "Pavel-"
+      description: "hyphen at end rejected"
+      expected_error: "Special characters cannot be the first or last character."
+
+    - id: "mn-i-09"
+      value: "456"
+      description: "digits only rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-10"
+      value: "Ghy56hju"
+      description: "digits mixed in middle rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+    - id: "mn-i-11"
+      value: "Ghjyt4"
+      description: "digit at end rejected"
+      expected_error: "Middle name must contain letters from the Latin alphabet or Polish national characters."
+
+
+# Passport ID (LP-42 valid, LP-43 invalid)
+
+passport_id:
+  valid:
+    - id: "pid-v-01"
+      value: "12345678945481"
+      description: "digits only accepted"
+
+    - id: "pid-v-02"
+      value: "FG5R89H"
+      description: "7 characters — 3 digits + 4 capitals — min boundary"
+
+    - id: "pid-v-03"
+      value: "4F5G8T9"
+      description: "7 characters — 4 digits + 3 capitals — min boundary"
+
+    - id: "pid-v-04"
+      value: "1234567"
+      description: "7 digits only — min boundary"
+
+    - id: "pid-v-05"
+      value: "12345678912345678985"
+      description: "20 characters — max boundary"
+
+    - id: "pid-v-06"
+      value: "FHT456Y6"
+      description: "8 characters — boundary"
+
+    - id: "pid-v-07"
+      value: "FHT456Y6HYERNF56OPE"
+      description: "19 characters — boundary"
+
+  invalid:
+    - id: "pid-i-01"
+      value: "ASDFGHJ"
+      description: "capital letters only — no digits rejected"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-02"
+      value: "asdfjgk"
+      description: "lowercase letters rejected"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-03"
+      value: "FG54HJ"
+      description: "fewer than 3 digits rejected"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-04"
+      value: ""
+      description: "empty field rejected"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-05"
+      value: "!@$%^&*()"
+      description: "special characters rejected"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-06"
+      value: "FHT456"
+      description: "6 characters — below min boundary"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+    - id: "pid-i-07"
+      value: "FHRT45G6Y6HYERNF56OPE"
+      description: "21 characters — above max boundary"
+      expected_error: "Must be between 7 and 20 characters long. Passport ID must contain at least 3 digits and can contain capital Latin letters."
+
+
+# Birth Date (LP-48 valid, LP-46 invalid)
+
+birth_date:
+  valid:
+    - id: "bd-v-01"
+      value: "04\\05\\1997"
+      description: "valid date manually entered DD\\MM\\YYYY"
+
+    - id: "bd-v-02"
+      value: "29\\02\\2020"
+      description: "leap year Feb 29 accepted — 2020"
+
+    - id: "bd-v-03"
+      value: "29\\02\\2000"
+      description: "leap year Feb 29 accepted — 2000"
+
+    - id: "bd-v-04"
+      value: "28\\02\\1998"
+      description: "non-leap year Feb 28 accepted — 1998"
+
+    - id: "bd-v-05"
+      value: "28\\02\\2021"
+      description: "non-leap year Feb 28 accepted — 2021"
+
+  invalid:
+    - id: "bd-i-01"
+      value: "31\\03\\2027"
+      description: "future date rejected"
+      expected_error: "Year must be within the last 100 years."
+
+    - id: "bd-i-02"
+      value: "31\\03\\1925"
+      description: "more than 100 years ago rejected"
+      expected_error: "Year must be within the last 100 years."
+
+    - id: "bd-i-03"
+      value: "29\\02\\1999"
+      description: "non-leap year Feb 29 rejected"
+      expected_error: "Invalid date."
+
+    - id: "bd-i-04"
+      value: "32\\03\\2025"
+      description: "invalid day 32 rejected"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+
+    - id: "bd-i-05"
+      value: "00\\03\\2025"
+      description: "invalid day 00 rejected"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+
+    - id: "bd-i-06"
+      value: "05\\00\\2025"
+      description: "invalid month 00 rejected"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+
+    - id: "bd-i-07"
+      value: "05\\23\\2025"
+      description: "invalid month 23 rejected"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+
+    - id: "bd-i-08"
+      value: "05\\03\\958"
+      description: "invalid year 3 digits rejected"
+      expected_error: "Invalid date format. Expected DD\\MM\\YYYY."
+
+
+# Name formatting (LP-331 step 3)
+# Used by TestNameFormatting — skipped pending DB assertion setup
+
+name_formatting:
+  valid:
+    - id: "nf-v-01"
+      first_name: "lódź-nova"
+      middle_name: "środa-buLgA"
+      last_name: "wiesłaW-siKORSKy"
+      expected:
+        first_name: "Lódź-Nova"
+        middle_name: "Środa-Bulga"
+        last_name: "Wiesław-Sikorsky"

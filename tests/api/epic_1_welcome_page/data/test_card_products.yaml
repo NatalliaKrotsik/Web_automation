@@ -1,0 +1,15 @@
+expected_status_code: 200
+
+slugs:
+  - market-card-standard
+  - market-card-virtual
+  - market-card-premium
+
+expected_card_fields:
+  - id
+  - slug
+  - name
+  - description
+  - buttonText
+
+cards_list_key: cards

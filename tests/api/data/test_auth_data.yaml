@@ -1,0 +1,7 @@
+# Test data for tests/api/test_auth.py
+# Convention: tests/<suite>/data/<test_module>_data.yaml
+
+invalid_credentials:
+  - name: fake_user
+    email: fake_user@fake.com
+    password: FakePassword123!
